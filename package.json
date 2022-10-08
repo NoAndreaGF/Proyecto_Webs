@@ -1,0 +1,17 @@
+{
+  "name": "proyecto-distribucion",
+  "version": "1.0.0",
+  "description": "Programa de ventas para un distribuidor independiente",
+  "main": "/views/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrea Felix, Octavio Torres, Maria Encinas, Andrea Garcia",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.24.0"
+  }
+}
