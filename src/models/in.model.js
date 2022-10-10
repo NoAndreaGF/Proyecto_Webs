@@ -1,5 +1,5 @@
-import { INTEGER, DATE, Sequelize } from 'sequelize';
-import {sequelize} from "../data/connection.js";
+import { INTEGER, DATE } from 'sequelize';
+import { sequelize } from '../data/connection.js';
 
 const In = sequelize.define("in", {
     idIn: { 
@@ -11,11 +11,6 @@ const In = sequelize.define("in", {
         type: INTEGER,
         allowNull: false 
     },
-    idProducts: { 
-        type: INTEGER,  
-        secundaryKey: true,
-        allowNull: false 
-    },
     date: { 
         type: DATE,
         allowNull: false 
@@ -23,18 +18,13 @@ const In = sequelize.define("in", {
     createdAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW
+        defaultValue:  DATE.NOW
     },
     updatedAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW 
+        defaultValue:  DATE.NOW 
     },
 });
 
-// Test
-sequelize.sync().then(() => {
-    console.log('Se creo la entrada');
- }).catch((error) => {
-    console.error('No se pudó crear la entrada : ', error);
- });
+export { In };

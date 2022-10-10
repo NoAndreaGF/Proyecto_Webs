@@ -1,5 +1,5 @@
-import { INTEGER, STRING, DATE, FLOAT, Sequelize } from 'sequelize';
-import {sequelize} from "../data/connection.js";
+import { INTEGER, STRING, DATE, FLOAT } from 'sequelize';
+import { sequelize } from '../data/connection.js';
 
 const Product = sequelize.define("product", {
     idProducts: { 
@@ -33,18 +33,13 @@ const Product = sequelize.define("product", {
     createdAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW
+        defaultValue:  DATE.NOW
     },
     updatedAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW 
+        defaultValue:  DATE.NOW 
     },
 });
 
-// Test
-sequelize.sync().then(() => {
-    console.log('Se creo el producto');
- }).catch((error) => {
-    console.error('No se pudó crear el producto : ', error);
- });
+export { Product };

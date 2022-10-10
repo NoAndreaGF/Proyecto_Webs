@@ -1,8 +1,8 @@
-import { INTEGER, DATE } from 'sequelize';
+import { INTEGER, DATE, FLOAT } from 'sequelize';
 import { sequelize } from '../data/connection.js';
 
-const Out = sequelize.define("out", {
-    idOut: { 
+const RelProductOrder = sequelize.define("relproductorder", {
+    idRel: { 
         type: INTEGER,  
         primaryKey: true, 
         autoIncrement: true
@@ -11,8 +11,8 @@ const Out = sequelize.define("out", {
         type: INTEGER,
         allowNull: false 
     },
-    date: { 
-        type: DATE,
+    price: { 
+        type: FLOAT,
         allowNull: false 
     },
     createdAt: { 
@@ -23,8 +23,8 @@ const Out = sequelize.define("out", {
     updatedAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  DATE.NOW 
+        defaultValue:  DATE.NOW
     },
 });
 
-export { Out };
+export { RelProductOrder };

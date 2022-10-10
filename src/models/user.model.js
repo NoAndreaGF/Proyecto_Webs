@@ -1,5 +1,5 @@
 import { INTEGER, STRING } from 'sequelize';
-import {sequelize} from "../data/connection.js";
+import { sequelize } from '../data/connection.js';
 
 const User = sequelize.define("user", {
     id: { 
@@ -19,9 +19,4 @@ const User = sequelize.define("user", {
     }
 });
 
-// Test
-sequelize.sync().then(() => {
-    console.log('Se creo el usuario');
- }).catch((error) => {
-    console.error('No se pudó crear el usuario : ', error);
- });
+export { User };

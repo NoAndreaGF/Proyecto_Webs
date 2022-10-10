@@ -1,5 +1,5 @@
 import { INTEGER, STRING, DATE } from 'sequelize';
-import {sequelize} from "../data/connection.js";
+import { sequelize } from '../data/connection.js';
 
 const Customer = sequelize.define("customer", {
     idCustomer: { 
@@ -32,18 +32,13 @@ const Customer = sequelize.define("customer", {
     createdAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW 
+        defaultValue:  DATE.NOW
     },
     updatedAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW
+        defaultValue:  DATE.NOW
     },
 });
 
-// Test
-sequelize.sync().then(() => {
-    console.log('Se creo el cliente');
- }).catch((error) => {
-    console.error('No se pudó crear el cliente : ', error);
- });
+export { Customer };

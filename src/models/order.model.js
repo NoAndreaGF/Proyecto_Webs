@@ -1,16 +1,11 @@
-import { INTEGER, STRING, DATE, FLOAT, Sequelize } from 'sequelize';
-import {sequelize} from "../data/connection.js";
+import { INTEGER, STRING, DATE, FLOAT } from 'sequelize';
+import { sequelize } from '../data/connection.js';
 
 const Order = sequelize.define("order", {
     idOrder: { 
         type: INTEGER,  
         primaryKey: true, 
         autoIncrement: true
-    },
-    idCustomer: { 
-        type: INTEGER, 
-        secondaryKey: true,
-        allowNull: false 
     },
     orderDate: { 
         type: DATE, 
@@ -32,18 +27,13 @@ const Order = sequelize.define("order", {
     createdAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW
+        defaultValue: DATE.NOW
     },
     updatedAt: { 
         type: DATE,
         allowNull: false,
-        defaultValue:  Sequelize.NOW 
+        defaultValue:  DATE.NOW 
     },
 });
 
-// Test
-sequelize.sync().then(() => {
-    console.log('Se creo la orden');
- }).catch((error) => {
-    console.error('No se pudó crear la orden : ', error);
- });
+export { Order };
