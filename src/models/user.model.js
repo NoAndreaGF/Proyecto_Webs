@@ -1,4 +1,4 @@
-import { INTEGER, STRING } from 'sequelize';
+import { INTEGER, STRING, DATE } from 'sequelize';
 import { sequelize } from '../data/connection.js';
 
 const User = sequelize.define("user", {
@@ -16,7 +16,17 @@ const User = sequelize.define("user", {
         type: STRING, 
         min: 6,
         allowNull: false 
-    }
+    },
+    createdAt: { 
+        type: DATE,
+        allowNull: false,
+        defaultValue:  DATE.NOW
+    },
+    updatedAt: { 
+        type: DATE,
+        allowNull: false,
+        defaultValue:  DATE.NOW 
+    },
 });
 
 export { User };

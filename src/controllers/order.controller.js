@@ -1,60 +1,43 @@
-import { db } from "../models/models.js";
+import { OrderRepository } from '../data/repositories/order.repository.js';
 
-const Order = db.order;
+const orderRepository = new OrderRepository();
 
-const createOrder = (idCustomer, order) => {
-    return Order.create({
-        orderDate: order.orderDate,
-        deliveryDate: order.deliveryDate,
-        status: order.status,
-        totalAmount: order.totalAmount,
-        idCustomer: idCustomer,
-    }).then((order) => {
-       console.log("Se creo la orden: " + JSON.stringify(order, null, 4));
-       return order;
-    }).catch((err) => {
-       console.error("Error al crear el cliente: ", err)
-    });
-};
+export class OrderRepository {
+    async createOrder(order) {
+        await orderRepository.create(order);
+    }
 
-const findByIdOrder = (idOrder) => {
-    return Order.findByPk(idOrder, {include:["customer"]})
-   .then((order) => {
-      return order;
-   }).catch((err) => {
-      console.error("Error al buscar orden: ", err);
-   });
-};
-
-const findAllOrder = () => {
-    return Order.findAll({
-        include:["customer"],
-    }).then((customers) => {
-       return customers;
-    });
-};
-
-const updateOrder = (idOrder, orderData) => {
-    return Order.update(orderData, {
-        where: {
-            idOrder
+    async updateOrder(idOrder, orderData) {
+        let orderUpdate = await orderRepository.findById(idOrder);
+        if(orderUpdate === undefined){
+            throw new Error("La orden no se encuentra definida y no se puede actualizar");
         }
-    }).then((order) => {
-        console.log("Se actualizó la orden: " + JSON.stringify(order, null, 4));
-        return order;
-     }).catch((err) => {
-        console.error("Error al actualizar la orden: ", err)
-     });
-};
+        else if(orderUpdate === null){
+            throw new Error("La orden es nula y no se puede actualizar");
+        }
 
-const dropOrder = (idOrder) => {
-    return Order.destroy({ 
-        where: {idOrder} 
-    }).then((idOrder) => {
-        console.log("Se eliminó la orden: " + JSON.stringify(idOrder, null, 4));
-     }).catch((err) => {
-        console.error("Error al eliminar la orden: ", err)
-     });
-};
+        await orderRepository.update(idOrder, orderData);
+    }
 
-export { createOrder, findAllOrder, findByIdOrder, updateOrder, dropOrder };
+    async findByIdOrder(idOrder) {
+        let result = await orderRepository.findById(idOrder);
+
+        if (result === undefined) {
+            throw new Error("La orden no existe");
+        }
+        return result;
+    }
+
+    async findAllOrders() {
+        let result = await orderRepository.findAll();
+
+        if (result === undefined) {
+            throw new Error("No hay ordenes registradas");
+        }
+        return result;
+    }
+
+    async delete(idOrder){
+        await orderRepository.delete(idOrder);
+    }
+}

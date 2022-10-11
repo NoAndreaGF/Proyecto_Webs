@@ -21,23 +21,23 @@ db.in = In;
 db.out = Out;
 
 // Association One to Many orders-customer
-db.customer.hasMany(db.order, {as:'orders'});
+db.customer.hasMany(db.order, {as:'orders', foreignKey: {allowNull: false, name: 'idCustomer' }});
 db.order.belongsTo(db.customer, {as:'customer', foreignKey: {allowNull: false, name: 'idCustomer' }});
 
 // Association One to Many product-in
-db.product.hasMany(db.in, {as:'ins'});
-db.in.belongsTo(db.product, {as:'product', foreignKey: {allowNull: false, name: 'idProducts' }});
+db.product.hasMany(db.in, {as:'ins', foreignKey: {allowNull: false, name: 'idProduct' }});
+db.in.belongsTo(db.product, {as:'product', foreignKey: {allowNull: false, name: 'idProduct' }});
 
 // Association One to Many product-out
-db.product.hasMany(db.out, {as:'outs'});
-db.out.belongsTo(db.product, {as:'product', foreignKey: {allowNull: false, name: 'idProducts' }});
+db.product.hasMany(db.out, {as:'outs', foreignKey: {allowNull: false, name: 'idProduct' }});
+db.out.belongsTo(db.product, {as:'product', foreignKey: {allowNull: false, name: 'idProduct' }});
 
 // Association One to Many product-relProductOrder
-db.product.hasMany(db.relProductOrder, {as:'orders'});
-db.relProductOrder.belongsTo(db.product, {as:'product', foreignKey: {allowNull: false, name: 'idProducts' }});
+db.product.hasMany(db.relProductOrder, {as:'orders', foreignKey: {allowNull: false, name: 'idProduct' }});
+db.relProductOrder.belongsTo(db.product, {as:'product', foreignKey: {allowNull: false, name: 'idProduct' }});
 
 // Association One to Many order-relProductOrder
-db.order.hasMany(db.relProductOrder, {as:'products'});
+db.order.hasMany(db.relProductOrder, {as:'products', foreignKey: {allowNull: false, name: 'idOrder' }});
 db.relProductOrder.belongsTo(db.order, {as:'order', foreignKey: {allowNull: false, name: 'idOrder' }});
 
 export { db };

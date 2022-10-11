@@ -2,7 +2,7 @@ import { INTEGER, STRING, DATE, FLOAT } from 'sequelize';
 import { sequelize } from '../data/connection.js';
 
 const Product = sequelize.define("product", {
-    idProducts: { 
+    idProduct: { 
         type: INTEGER,  
         primaryKey: true, 
         autoIncrement: true

@@ -1,59 +1,43 @@
-import { db } from '../models/models.js';
+import { CustomerRepository } from '../data/repositories/customer.repository.js';
 
-const Customer = db.customer;
+const customerRepository = new CustomerRepository();
 
-const create = (customer) => {
-    return Customer.create({
-       name: customer.name,
-       lastName: customer.lastName,
-       phone: customer.phone,
-       address: customer.address,
-    }).then((customer) => {
-       console.log("Se creo el cliente: " + JSON.stringify(customer, null, 4));
-       return customer;
-    }).catch((err) => {
-       console.error("Error al crear el cliente: ", err)
-    });
-};
+export class CustomerController {
+    async createCustomer(customer) {
+        await customerRepository.create(customer);
+    }
 
-const findById = (idCustomer) => {
-    return Customer.findByPk(idCustomer, {include:["orders"]})
-    .then((customer) => {
-       return customer;
-    }).catch((err) => {
-       console.error("Error al buscar cliente: ", err);
-    });
-};
-
-const findAll = () => {
-    return Customer.findAll({
-        include:["orders"],
-    }).then((customers) => {
-       return customers;
-    });
-};
-
-const update = (idCustomer, customerData) => {
-    return Customer.update(customerData, {
-        where: {
-            idCustomer
+    async updateCustomer(idCustomer, customerData) {
+        let customerUpdate = await customerRepository.findById(idCustomer);
+        if(customerUpdate === undefined){
+            throw new Error("El cliente no se encuentra definido y no se puede actualizar");
         }
-    }).then((customer) => {
-        console.log("Se actualizó el cliente: " + JSON.stringify(customer, null, 4));
-        return customer;
-     }).catch((err) => {
-        console.error("Error al actualizar el cliente: ", err)
-     });
-};
+        else if(customerUpdate === null){
+            throw new Error("El cliente es nulo y no se puede actualizar");
+        }
 
-const drop = (idCustomer) => {
-    return Customer.destroy({ 
-        where: {idCustomer} 
-    }).then((idCustomer) => {
-        console.log("Se eliminó el cliente: " + JSON.stringify(idCustomer, null, 4));
-     }).catch((err) => {
-        console.error("Error al eliminar el cliente: ", err)
-     });
-};
+        await customerRepository.update(idCustomer, customerData);
+    }
 
-export { create, findAll, findById, update, drop };
+    async findByIdCustomer(idCustomer) {
+        let result = await customerRepository.findById(idCustomer);
+
+        if (result === undefined) {
+            throw new Error("El cliente no existe");
+        }
+        return result;
+    }
+
+    async findAllCustomers() {
+        let result = await customerRepository.findAll();
+
+        if (result === undefined) {
+            throw new Error("No hay clientes registrados");
+        }
+        return result;
+    }
+
+    async delete(idCustomer){
+        await customerRepository.delete(idCustomer);
+    }
+}

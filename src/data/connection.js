@@ -10,11 +10,4 @@ const sequelize = new Sequelize(
   }
 );
 
-// Test
-sequelize.authenticate().then(() => {
-    console.log('Conexión establecida.');
- }).catch((error) => {
-    console.error('No se estableció la conexión: ', error);
- });
-
 export {sequelize};
