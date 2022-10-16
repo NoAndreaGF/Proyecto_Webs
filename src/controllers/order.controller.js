@@ -2,42 +2,110 @@ import { OrderRepository } from '../data/repositories/order.repository.js';
 
 const orderRepository = new OrderRepository();
 
-export class OrderRepository {
-    async createOrder(order) {
-        await orderRepository.create(order);
-    }
-
-    async updateOrder(idOrder, orderData) {
-        let orderUpdate = await orderRepository.findById(idOrder);
-        if(orderUpdate === undefined){
-            throw new Error("La orden no se encuentra definida y no se puede actualizar");
-        }
-        else if(orderUpdate === null){
-            throw new Error("La orden es nula y no se puede actualizar");
+export class OrderController {
+    async create(req, res) {
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos de la orden'
+            });
+            return;
         }
 
-        await orderRepository.update(idOrder, orderData);
-    }
+        // Create order
+        const order = {
+            orderDate: req.body.orderDate,
+            deliveryDate: req.body.deliveryDate,
+            status: req.body.status,
+            totalAmount: req.body.totalAmount,
+            idCustomer : req.body.idCustomer,
+        };
 
-    async findByIdOrder(idOrder) {
-        let result = await orderRepository.findById(idOrder);
+        // Save order in database
+        await orderRepository.create(
+            order
+        ).then((order) => {
+            res.send("Se creo la orden: " + JSON.stringify(order, null, 4));
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
 
-        if (result === undefined) {
-            throw new Error("La orden no existe");
+    };
+
+    async update(req, res) {
+        const idOrder = req.params.id;
+
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos a editar de la orden'
+            });
+            return;
         }
-        return result;
+
+        // Create order
+        const order = {
+            orderDate: req.body.orderDate,
+            deliveryDate: req.body.deliveryDate,
+            status: req.body.status,
+            totalAmount: req.body.totalAmount,
+            idCustomer : req.body.idCustomer,
+            updatedAt: Date.now(),
+        };
+
+        await orderRepository.update(idOrder, order)
+        .then(() => {
+            res.send("Se actualizó la orden.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+            return;
+        });
+
     }
 
-    async findAllOrders() {
-        let result = await orderRepository.findAll();
-
-        if (result === undefined) {
-            throw new Error("No hay ordenes registradas");
-        }
-        return result;
+    async findById(req, res) {
+        const idOrder = req.params.id;
+        await orderRepository.findById(idOrder)
+        .then((order) => {
+            res.send("Se encontro la orden: " + JSON.stringify(order, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
     }
 
-    async delete(idOrder){
-        await orderRepository.delete(idOrder);
+    async findAll(req, res) {
+        await orderRepository.findAll()
+        .then((orders) => {
+            res.send("Ordenes encontradas: " + JSON.stringify(orders, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+
+    }
+
+    async delete(req, res){
+        const idOrder = req.params.id;
+
+        await orderRepository.delete(idOrder)
+        .then(() => {
+            res.send("Se elimino la orden.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+        
     }
 }

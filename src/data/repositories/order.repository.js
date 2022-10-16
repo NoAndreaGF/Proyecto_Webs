@@ -3,57 +3,55 @@ import { db } from '../../models/models.js';
 const Order = db.order;
 
 export class OrderRepository {
-
-    create = async (order) => {
-        return await Order.create(
-            order
-        ).then((order) => {
-            console.log("Se creo la orden: " + JSON.stringify(order, null, 4));
-            return order;
-        }).catch((err) => {
-            console.error("Error al crear la orden: ", err)
-        });
+    async create(order) {
+        return await Order.create(order);
     };
 
-    update = async (idOrder, orderData) => {
-        return await Order.update(orderData, {
+    async update(idOrder, orderData) {
+        let orderUpdate = await Order.findByPk(idOrder);
+        // Validation
+        if(orderUpdate === undefined){
+            throw new Error("La orden no se encuentra definida y no se puede actualizar");
+        }
+        else if(orderUpdate === null){
+            throw new Error("La orden es nula y no se puede actualizar");
+        }
+
+        await Order.update(orderData, {
             where: {
                 idOrder
             }
-        }).then((order) => {
-            console.log("Se actualizó la orden: " + JSON.stringify(order, null, 4));
-            return order;
-        }).catch((err) => {
-            console.error("Error al actualizar la orden: ", err)
         });
     };
 
-    findById = async (idOrder) => {
-        return await Order.findByPk(idOrder, {
+    async findById(idOrder) {
+        let result = await Order.findByPk(idOrder, {
             include:["customer", "products"]
-        }).then((order) => {
-           return order;
-        }).catch((err) => {
-           console.error("Error al buscar orden: ", err);
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("La orden no existe");
+        }
+        return result;
     };
 
-    findAll = async () => {
-        return await Order.findAll({
+    async findAll() {
+        let result =  await Order.findAll({
             attributes: ["idOrder", "orderDate", "deliveryDate", "status", "totalAmount", "idCustomer", "createdAt", "updatedAt"],
             include:["customer"],
-        }).then((orders) => {
-           return orders;
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("No hay ordenes registradas");
+        }
+        return result;
     };
 
-    delete = async (idOrder) => {
+    async delete(idOrder) {
         await Order.destroy({ 
             where: {idOrder} 
-        }).then((idOrder) => {
-            console.log("Se eliminó la orden: " + JSON.stringify(idOrder, null, 4));
-        }).catch((err) => {
-            console.error("Error al eliminar la orden: ", err)
         });
     };
 

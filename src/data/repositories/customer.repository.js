@@ -3,58 +3,55 @@ import { db } from '../../models/models.js';
 const Customer = db.customer;
 
 export class CustomerRepository {
-
-    create = async (customer) => {
-        return await Customer.create(
-            customer
-         ).then((customer) => {
-            console.log("Se creo el cliente: " + JSON.stringify(customer, null, 4));
-            return customer;
-         }).catch((err) => {
-            console.error("Error al crear el cliente: ", err)
-         });
+    async create(customer) {
+        return await Customer.create(customer);
     };
 
-    update = async (idCustomer, customerData) => {
-        return await Customer.update(customerData, {
+    async update(idCustomer, customerData) {
+        let customerUpdate = await Customer.findByPk(idCustomer);
+        // Validation
+        if(customerUpdate === undefined){
+            throw new Error("El cliente no se encuentra definido y no se puede actualizar");
+        }
+        else if(customerUpdate === null){
+            throw new Error("El cliente es nulo y no se puede actualizar");
+        }
+
+        await Customer.update(customerData, {
             where: {
                 idCustomer
             }
-        }).then((customer) => {
-            console.log("Se actualizó el cliente: " + JSON.stringify(customer, null, 4));
-            return customer;
-        }).catch((err) => {
-            console.error("Error al actualizar el cliente: ", err)
         });
     };
 
-    findById = async (idCustomer) => {
-        return await Customer.findByPk(idCustomer, {
+    async findById(idCustomer) {
+        let result = await Customer.findByPk(idCustomer, {
             include:["orders"]
-        }).then((customer) => {
-           return customer;
-        }).catch((err) => {
-           console.error("Error al buscar cliente: ", err);
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("El cliente no existe");
+        }
+        return result;
     };
 
-    findAll = async () => {
-        return await Customer.findAll({
+    async findAll() {
+        let result = await Customer.findAll({
             attributes: ["idCustomer", "name", "lastName", "phone", "address", "createdAt", "updatedAt"],
             include:["orders"],
-        }).then((customers) => {
-           return customers;
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("No hay clientes registrados");
+        }
+        return result;
     };
 
-    delete = async (idCustomer) => {
+    async delete(idCustomer){
         await Customer.destroy({ 
             where: {idCustomer} 
-        }).then((idCustomer) => {
-            console.log("Se eliminó el cliente: " + JSON.stringify(idCustomer, null, 4));
-         }).catch((err) => {
-            console.error("Error al eliminar el cliente: ", err)
         });
     };
-
 }

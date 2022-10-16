@@ -4,57 +4,55 @@ const RelProductOrder = db.relProductOrder;
 
 export class RelProductOrderRepository {
 
-    create = async (relProductOrder) => {
-        return await RelProductOrder.create(
-            relProductOrder
-        ).then((relProductOrder) => {
-            console.log("Se creo la relacioón producto-orden: " + JSON.stringify(relProductOrder, null, 4));
-            return relProductOrder;
-        }).catch((err) => {
-            console.error("Error al crear la relacioón producto-orden: ", err)
-        });
+    async create(relProductOrder) {
+        return await RelProductOrder.create(relProductOrder);
     };
 
-    update = async (idRelProductOrder, relProductOrderData) => {
-        return await RelProductOrder.update(relProductOrderData, {
+    async update(idRel, relProductOrderData) {
+        let relUpdate = await RelProductOrder.findByPk(idRel);
+        // Validation
+        if(relUpdate === undefined){
+            throw new Error("La relación no se encuentra definida y no se puede actualizar");
+        }
+        else if(relUpdate === null){
+            throw new Error("La relación es nula y no se puede actualizar");
+        }
+
+        await RelProductOrder.update(relProductOrderData, {
             where: {
-                idRelProductOrder
+                idRel
             }
-        }).then((relProductOrder) => {
-            console.log("Se actualizó la relacioón producto-orden: " + JSON.stringify(relProductOrder, null, 4));
-            return relProductOrder;
-        }).catch((err) => {
-            console.error("Error al actualizar la relacioón producto-orden: ", err)
         });
     };
 
-    findById = async (idRelProductOrder) => {
-        return await RelProductOrder.findByPk(idRelProductOrder, {
-            include:["customer"]
-        }).then((relProductOrder) => {
-           return relProductOrder;
-        }).catch((err) => {
-           console.error("Error al buscar orden: ", err);
+    async findById(idRel) {
+        let result = await RelProductOrder.findByPk(idRel, {
+            include:["product", "order"],
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("El relación no existe");
+        }
+        return result;
     };
 
-    findAll = async () => {
-        return await RelProductOrder.findAll({
+    async findAll() {
+        let result = await RelProductOrder.findAll({
             attributes: ["idRel", "quantity", "price", "createdAt", "updatedAt"],
             include:["product", "order"],
-        }).then((relProductOrders) => {
-           return relProductOrders;
         });
-    };
 
-    delete = async (idRelProductOrder) => {
+        // Validation
+        if (result === null) {
+            throw new Error("No hay relaciones registrados");
+        }
+        return result;
+    }
+
+    async delete(idRel) {
         await RelProductOrder.destroy({ 
-            where: {idRelProductOrder} 
-        }).then((idRelProductOrder) => {
-            console.log("Se eliminó la relacioón producto-orden: " + JSON.stringify(idRelProductOrder, null, 4));
-        }).catch((err) => {
-            console.error("Error al eliminar la relacioón producto-orden: ", err)
+            where: {idRel} 
         });
-    };
-
+    }
 }

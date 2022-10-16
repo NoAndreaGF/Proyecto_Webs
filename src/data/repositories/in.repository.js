@@ -4,56 +4,55 @@ const In = db.in;
 
 export class InRepository {
 
-    create = async (inObject) => {
-        await In.create(
-            inObject
-        ).then((inObject) => {
-            console.log("Se creo la entrada: " + JSON.stringify(inObject, null, 4));
-        return inObject;
-        }).catch((err) => {
-            console.error("Error al crear la entrada: ", err)
-        });
+    async create(inObject) {
+        return await In.create(inObject);
     };
 
-    update = async (idIn, inData) => {
+    async update(idIn, inData) {
+        let inUpdate = await In.findByPk(idIn);
+        // Validation
+        if(inUpdate === undefined){
+            throw new Error("La entrada no se encuentra definida y no se puede actualizar");
+        }
+        else if(inUpdate === null){
+            throw new Error("La entrada es nula y no se puede actualizar");
+        }
+
         await In.update(inData, {
             where: {
                 idIn
             }
-        }).then((inObject) => {
-            console.log("Se actualizó la entrada: " + JSON.stringify(inObject, null, 4));
-            return inObject;
-        }).catch((err) => {
-            console.error("Error al actualizar la entrada: ", err)
         });
     };
 
-    findById = async (idIn) => {
-        await In.findByPk(idIn, {
+    async findById(idIn) {
+        let result = await In.findByPk(idIn, {
             include:["product"]
-        }).then((inObject) => {
-           return inObject;
-        }).catch((err) => {
-           console.error("Error al buscar entrada: ", err);
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("La entrada no existe");
+        }
+        return result;
     };
 
-    findAll = async () => {
-        await In.findAll({
+    async findAll() {
+        let result = await In.findAll({
             attributes: ["idIn", "quantity", "date", "createdAt", "updatedAt"],
             include:["product"],
-        }).then((inObjects) => {
-           return inObjects;
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("No hay entradas registradas");
+        }
+        return result;
     };
 
-    delete = async (idIn) => {
-        await  In.destroy({ 
+    async delete(idIn) {
+        await In.destroy({ 
             where: {idIn} 
-        }).then((idIn) => {
-            console.log("Se eliminó la entrada: " + JSON.stringify(idIn, null, 4));
-        }).catch((err) => {
-            console.error("Error al eliminar la entrada: ", err)
         });
     };
 

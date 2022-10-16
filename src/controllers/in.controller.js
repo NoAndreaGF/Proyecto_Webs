@@ -3,41 +3,105 @@ import { InRepository } from '../data/repositories/in.repository.js';
 const inRepository = new InRepository();
 
 export class InController {
-    async createIn(inObject) {
-        await inRepository.create(inObject);
-    }
-
-    async updateIn(idIn, inData) {
-        let inUpdate = await inRepository.findById(idIn);
-        if(inUpdate === undefined){
-            throw new Error("La entrada no se encuentra definida y no se puede actualizar");
-        }
-        else if(inUpdate === null){
-            throw new Error("La entrada es nula y no se puede actualizar");
+    async create(req, res) {
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos de la entrada'
+            });
+            return;
         }
 
-        await inRepository.update(idIn, inData);
-    }
+        // Create in
+        const inObject = {
+            quantity: req.body.quantity,
+            date: req.body.date,
+            idProduct : req.body.idProduct,
+        };
 
-    async findByIdIn(idIn) {
-        let result = await inRepository.findById(idIn);
+        // Save in in database
+        await inRepository.create(
+            inObject
+        ).then((inObject) => {
+            res.send("Se creo la entrada: " + JSON.stringify(inObject, null, 4));
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
 
-        if (result === undefined) {
-            throw new Error("La entrada no existe");
+    };
+    
+    async update(req, res) {
+        const idIn = req.params.id;
+
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos a editar de la entrada'
+            });
+            return;
         }
-        return result;
+
+        // Create in
+        const inObject = {
+            quantity: req.body.quantity,
+            date: req.body.date,
+            idProduct : req.body.idProduct,
+            updatedAt: Date.now(),
+        };
+
+        await inRepository.update(idIn, inObject)
+        .then(() => {
+            res.send("Se actualizo la entrada.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+            return;
+        });
+
     }
 
-    async findAllIns() {
-        let result = await inRepository.findAll();
-
-        if (result === undefined) {
-            throw new Error("No hay entradas registrados");
-        }
-        return result;
+    async findById(req, res) {
+        const idIn = req.params.id;
+        await inRepository.findById(idIn)
+        .then((inObject) => {
+            res.send("Se encontro la entrada: " + JSON.stringify(inObject, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
     }
 
-    async delete(idIn){
-        await inRepository.delete(idIn);
+    async findAll(req, res) {
+        await inRepository.findAll()
+        .then((inObjects) => {
+            res.send("Entradas encontradas: " + JSON.stringify(inObjects, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+
+    }
+
+    async delete(req, res){
+        const idIn = req.params.id;
+
+        await inRepository.delete(idIn)
+        .then(() => {
+            res.send("Se elimino la entrada.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+        
     }
 }

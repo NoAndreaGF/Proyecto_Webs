@@ -3,41 +3,109 @@ import { ProductRepository } from '../data/repositories/product.repository.js';
 const productRepository = new ProductRepository();
 
 export class ProductController {
-    async createProduct(product) {
-        await productRepository.create(product);
-    }
-
-    async updateProduct(idProduct, productData) {
-        let productUpdate = await productRepository.findById(idProduct);
-        if(productUpdate === undefined){
-            throw new Error("El producto no se encuentra definido y no se puede actualizar");
-        }
-        else if(productUpdate === null){
-            throw new Error("El producto es nulo y no se puede actualizar");
+    async create(req, res) {
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos del producto'
+            });
+            return;
         }
 
-        await productRepository.update(idProduct, productData);
-    }
+        // Create product
+        const product = {
+            name: req.body.name,
+            brand: req.body.brand,
+            description: req.body.description,
+            price: req.body.price,
+            stock: req.body.stock,
+        };
 
-    async findByIdProduct(idProduct) {
-        let result = await productRepository.findById(idProduct);
+        // Save product in database
+        await productRepository.create(
+            product
+        ).then((product) => {
+            res.send("Se creo el producto: " + JSON.stringify(product, null, 4));
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
 
-        if (result === undefined) {
-            throw new Error("El producto no existe");
+    };
+
+    async update(req, res) {
+        const idProduct = req.params.id;
+
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos a editar del producto'
+            });
+            return;
         }
-        return result;
+
+        // Create product
+        const product = {
+            name: req.body.name,
+            brand: req.body.brand,
+            description: req.body.description,
+            price: req.body.price,
+            stock: req.body.stock,
+            updatedAt: Date.now(),
+        };
+
+        await productRepository.update(idProduct, product)
+        .then(() => {
+            res.send("Se actualizo el producto.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+            return;
+        });
+
     }
 
-    async findAllProducts() {
-        let result = await productRepository.findAll();
-
-        if (result === undefined) {
-            throw new Error("No hay productos registrados");
-        }
-        return result;
+    async findById(req, res) {
+        const idProduct = req.params.id;
+        await productRepository.findById(idProduct)
+        .then((product) => {
+            res.send("Se encontro el producto: " + JSON.stringify(product, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
     }
 
-    async delete(idProduct){
-        await productRepository.delete(idProduct);
+    async findAll(req, res) {
+        await productRepository.findAll()
+        .then((products) => {
+            res.send("Productos encontrados: " + JSON.stringify(products, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+
+    }
+
+    async delete(req, res){
+        const idProduct = req.params.id;
+
+        await productRepository.delete(idProduct)
+        .then(() => {
+            res.send("Se elimino el producto.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+        
     }
 }

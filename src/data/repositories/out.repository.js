@@ -4,57 +4,56 @@ const Out = db.out;
 
 export class OutRepository {
 
-    create = async (outObject) => {
-        return await Out.create(
-            outObject
-        ).then((outObject) => {
-            console.log("Se creo la salida: " + JSON.stringify(outObject, null, 4));
-            return outObject;
-        }).catch((err) => {
-            console.error("Error al crear la salida: ", err)
-        });
+    async create(outObject) {
+        return await Out.create(outObject);
     };
 
-    update = async (idOut, outData) => {
-        return await Out.update(outData, {
+    async update(idOut, outData) {
+        let outUpdate = await Out.findByPk(idOut);
+        // Validation
+        if(outUpdate === undefined){
+            throw new Error("La salida no se encuentra definida y no se puede actualizar");
+        }
+        else if(outUpdate === null){
+            throw new Error("La salida es nula y no se puede actualizar");
+        }
+
+        await Out.update(outData, {
             where: {
                 idOut
             }
-        }).then((outObject) => {
-            console.log("Se actualizó la salida: " + JSON.stringify(outObject, null, 4));
-            return outObject;
-        }).catch((err) => {
-            console.error("Error al actualizar la salida: ", err)
         });
     };
 
-    findById = async (idOut) => {
-        return await Out.findByPk(idOut, {
+    async findById(idOut) {
+        let result =  await Out.findByPk(idOut, {
             include:["product"]
-        }).then((outObject) => {
-           return outObject;
-        }).catch((err) => {
-           console.error("Error al buscar salida: ", err);
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("La salida no existe");
+        }
+        return result;
     };
 
     findAll = async () => {
-        return await Out.findAll({
+        let result = await Out.findAll({
             attributes: ["idOut", "quantity", "date", "createdAt", "updatedAt"],
             include:["product"],
-        }).then((outObjects) => {
-           return outObjects;
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("No hay salidas registradas");
+        }
+        return result;
     };
 
-    delete = async (idOut) => {
+    async delete(idOut) {
         await Out.destroy({ 
             where: {idOut} 
-        }).then((idOut) => {
-            console.log("Se eliminó la salida: " + JSON.stringify(idOut, null, 4));
-        }).catch((err) => {
-            console.error("Error al eliminar la salida: ", err)
         });
-    };
+    }
 
 }

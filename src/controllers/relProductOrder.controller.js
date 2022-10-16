@@ -2,42 +2,108 @@ import { RelProductOrderRepository } from '../data/repositories/relProductOrder.
 
 const relProductOrderRepository = new RelProductOrderRepository();
 
-export class RelProductOrderRepositoryController {
-    async createRel(rel) {
-        await relProductOrderRepository.create(rel);
-    }
-
-    async updateRel(idRel, relData) {
-        let relUpdate = await relProductOrderRepository.findById(idRel);
-        if(relUpdate === undefined){
-            throw new Error("La relación no se encuentra definida y no se puede actualizar");
-        }
-        else if(relUpdate === null){
-            throw new Error("La relación es nula y no se puede actualizar");
+export class RelProductOrderController {
+    async create(req, res) {
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos de la relación'
+            });
+            return;
         }
 
-        await relProductOrderRepository.update(idRel, relData);
-    }
+        // Create relProductOrder
+        const rel = {
+            quantity: req.body.quantity,
+            price: req.body.price,
+            idProduct : req.body.idProduct,
+            idOrder : req.body.idOrder,
+        };
 
-    async findByIdRel(idRel) {
-        let result = await relProductOrderRepository.findById(idRel);
+        // Save relProductOrder in database
+        await relProductOrderRepository.create(
+            rel
+        ).then((rel) => {
+            res.send("Se creo la relación: " + JSON.stringify(rel, null, 4));
+        }).catch(() => {
+            res.status(500).send({
+                message:  'No se pudo conectar con la base de datos.'
+            });
+        });
 
-        if (result === undefined) {
-            throw new Error("La relación no existe");
+    };
+    
+    async update(req, res) {
+        const idRel = req.params.id;
+
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos a editar de la relación'
+            });
+            return;
         }
-        return result;
+
+        // Create relProductOrder
+        const rel = {
+            quantity: req.body.quantity,
+            price: req.body.price,
+            idProduct : req.body.idProduct,
+            idOrder : req.body.idOrder,
+            updatedAt: Date.now(),
+        };
+
+        await relProductOrderRepository.update(idRel, rel)
+        .then(() => {
+            res.send("Se actualizo la relación.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+            return;
+        });
+
     }
 
-    async findAllRels() {
-        let result = await relProductOrderRepository.findAll();
-
-        if (result === undefined) {
-            throw new Error("No hay relación registradas");
-        }
-        return result;
+    async findById(req, res) {
+        const idRel = req.params.id;
+        await relProductOrderRepository.findById(idRel)
+        .then((rel) => {
+            res.send("Se encontro la relación: " + JSON.stringify(rel, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
     }
 
-    async delete(idRel){
-        await relProductOrderRepository.delete(idRel);
+    async findAll(req, res) {
+        await relProductOrderRepository.findAll()
+        .then((rel) => {
+            res.send("Relaciones encontradas: " + JSON.stringify(rel, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+
+    }
+
+    async delete(req, res){
+        const idRel = req.params.id;
+
+        await relProductOrderRepository.delete(idRel)
+        .then(() => {
+            res.send("Se elimino la relación.");
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || 'No se pudo conectar con la base de datos.'
+            });
+        });
+        
     }
 }

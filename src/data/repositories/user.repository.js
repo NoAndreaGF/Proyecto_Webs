@@ -4,55 +4,55 @@ const User = db.user;
 
 export class UserRepository {
 
-    create = async (user) => {
-        return await User.create(
-            user
-        ).then((user) => {
-            console.log("Se creo el usuario: " + JSON.stringify(user, null, 4));
-            return user;
-        }).catch((err) => {
-            console.error("Error al crear el usuario: ", err)
-        });
+    async create(user) {
+        return await User.create(user);
     };
 
-    update = async (idUser, userData) => {
+    async update(id, userData) {
+        let userUpdate = await User.findByPk(id);
+        // Validation
+        if(userUpdate === undefined){
+            throw new Error("El usuario no se encuentra definido y no se puede actualizar");
+        }
+        else if(userUpdate === null){
+            throw new Error("El usuario es nulo y no se puede actualizar");
+        }
         return await User.update(userData, {
             where: {
-                idUser
+                id
             }
-        }).then((user) => {
-            console.log("Se actualizó el usuario: " + JSON.stringify(user, null, 4));
-            return user;
-        }).catch((err) => {
-            console.error("Error al actualizar el usuario: ", err)
         });
     };
 
-    findById = async (idUser) => {
-        return await User.findByPk(
-            idUser, 
-        ).then((user) => {
-           return user;
-        }).catch((err) => {
-           console.error("Error al buscar usuario: ", err);
-        });
+    async findById(id) {
+        let result = await User.findByPk(
+            id, 
+        );
+
+        // Validation
+        if (result === null) {
+            throw new Error("El usuario no existe");
+        }
+        return result;
     };
 
-    findAll = async () => {
-        return await User.findAll({
-            attributes: ["id", "username", "password", "createdAt", "updatedAt"],
-        }).then((users) => {
-           return users;
+    async findAll() {
+        let result =  await User.findAll({
+            attributes: ["id", "username", "createdAt", "updatedAt"],
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("No hay usuarios registrados");
+        }
+        return result;
     };
 
-    delete = async (idUser) => {
+    async delete(id) {
         await User.destroy({ 
-            where: {idUser} 
-        }).then((idUser) => {
-            console.log("Se eliminó el usuario: " + JSON.stringify(idUser, null, 4));
-         }).catch((err) => {
-            console.error("Error al eliminar el usuario: ", err)
+            where: {
+                id
+            } 
         });
     };
 

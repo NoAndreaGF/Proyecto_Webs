@@ -1,58 +1,23 @@
-import { db } from "./models/models.js";
-import { CustomerController } from "./controllers/customer.controller.js";
+import express from 'express';
+import { customersRouter } from './routes/customers.route.js';
+import { insRouter } from './routes/ins.route.js';
+import { ordersRouter } from './routes/orders.route.js';
+import { outsRouter } from './routes/outs.route.js';
+import { productsRouter } from './routes/products.route.js';
+import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
+import { usersRouter } from './routes/users.route.js';
 
-const controller = new CustomerController();
+const port = process.env.PORT || 3000;
+const app = express();
 
-const run = async() => {
-    const cuscre1 = {
-        name: "Pedro",
-        lastName: "Gala",
-        phone: "6114548595",
-        address: "Calles Claras 789",
-    };
+app.use('/customers', customersRouter);
+app.use('/ins', insRouter);
+app.use('/orders', ordersRouter);
+app.use('/outs', outsRouter);
+app.use('/products', productsRouter);
+app.use('/relProductOrders', relProductOrdersRouter);
+app.use('/users', usersRouter);
 
-    const cuscre2 = {
-        name: "María",
-        lastName: "Bela",
-        phone: "6558559598",
-        address: "Blvr. Azul 7892",
-    };
-
-    const cus1 = await controller.createCustomer(cuscre1);
-
-    const cus1Data = await controller.findByIdCustomer("1");
-    console.log(
-        "Cliente 1: " + cus1,
-        JSON.stringify(cus1Data, null, 2)
-    );
-
-    let cus2 = await controller.createCustomer(cuscre2);
-
-    
-    let customersAll = await controller.findAllCustomers();
-    console.log("Todos los clientes", JSON.stringify(customersAll, null, 2));
-
-    const const2Data = {
-        name: "María",
-        lastName: "Belanova",
-        phone: "6558559598",
-        address: "Casas Negras #4589",
-    };
-    await controller.updateCustomer("2", const2Data);
-
-    const cus2Data = await controller.findByIdCustomer("2");
-    console.log(
-        "Cliente 2 actualizado: " + cus2Data,
-        JSON.stringify(cus2Data, null, 2)
-    );
-
-    await controller.delete("1");
-    customersAll = await controller.findAllCustomers();
-    console.log("Todos los clientes", JSON.stringify(customersAll, null, 2));
-
-};
-
-db.sequelize.sync({force:true}).then(()=> {
-    console.log("Drop y re-sync db.");
-    run();
+app.listen(port, ()=> {
+    console.log(`El server esta en linea en el puerto: ${port}`);
 });

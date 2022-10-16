@@ -4,56 +4,55 @@ const Product = db.product;
 
 export class ProductRepository {
 
-    create = async (product) => {
-        return await Product.create(
-            product
-        ).then((product) => {
-            console.log("Se creo el producto: " + JSON.stringify(product, null, 4));
-            return product;
-        }).catch((err) => {
-            console.error("Error al crear el producto: ", err)
-        });
+    async create(product) {
+        return await Product.create(product);
     };
 
-    update = async (idProduct, productData) => {
-        return await Product.update(productData, {
+    async update(idProduct, productData) {
+        let productUpdate = await Product.findByPk(idProduct);
+        // Validation
+        if(productUpdate === undefined){
+            throw new Error("El producto no se encuentra definido y no se puede actualizar");
+        }
+        else if(productUpdate === null){
+            throw new Error("El producto es nulo y no se puede actualizar");
+        }
+
+        await Product.update(productData, {
             where: {
                 idProduct
             }
-        }).then((product) => {
-            console.log("Se actualizó el producto: " + JSON.stringify(product, null, 4));
-            return product;
-        }).catch((err) => {
-            console.error("Error al actualizar el producto: ", err)
         });
     };
 
-    findById = async (idProduct) => {
-        return await Product.findByPk(idProduct, {
+    async findById(idProduct) {
+        let result =  await Product.findByPk(idProduct, {
             include:["ins", "outs", "orders"]
-        }).then((product) => {
-           return product;
-        }).catch((err) => {
-           console.error("Error al buscar orden: ", err);
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("El producto no existe");
+        }
+        return result;
     };
 
     findAll = async () => {
-        return await Product.findAll({
+        let result = await Product.findAll({
             attributes: ["idProduct","name", "brand", "description", "price", "stock", "createdAt", "updatedAt"],
             include:["ins", "outs", "orders"],
-        }).then((products) => {
-           return products;
         });
+
+        // Validation
+        if (result === null) {
+            throw new Error("No hay productos registrados");
+        }
+        return result;
     };
 
-    delete = async (idProduct) => {
+    async delete(idProduct) {
         await Product.destroy({ 
             where: {idProduct} 
-        }).then((idProduct) => {
-            console.log("Se eliminó el producto: " + JSON.stringify(idProduct, null, 4));
-        }).catch((err) => {
-            console.error("Error al eliminar el producto: ", err)
         });
     };
 

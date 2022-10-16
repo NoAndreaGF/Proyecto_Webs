@@ -3,41 +3,103 @@ import { UserRepository } from '../data/repositories/user.repository.js';
 const userRepository = new UserRepository();
 
 export class UserController {
-    async createUser(user) {
-        await userRepository.create(user);
-    }
-
-    async updateUser(idUser, userData) {
-        let userUpdate = await userRepository.findById(idUser);
-        if(userUpdate === undefined){
-            throw new Error("El usuario no se encuentra definido y no se puede actualizar");
-        }
-        else if(userUpdate === null){
-            throw new Error("El usuario es nulo y no se puede actualizar");
+    async create(req, res) {
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos del usuario'
+            });
+            return;
         }
 
-        await userRepository.update(idUser, userData);
-    }
+        // Create user
+        const user = {
+            username: req.body.username,
+            password: req.body.password,
+        };
 
-    async findByIdUser(idUser) {
-        let result = await userRepository.findById(idUser);
+        // Save user in database
+        await userRepository.create(
+            user
+        ).then((user) => {
+            res.send("Se creo el usuario: " + JSON.stringify(user, null, 4));
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
 
-        if (result === undefined) {
-            throw new Error("El usuario no existe");
+    };
+
+    async update(req, res) {
+        const idUser = req.params.id;
+
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos a editar del usuario'
+            });
+            return;
         }
-        return result;
+
+        // Create user
+        const user = {
+            username: req.body.username,
+            password: req.body.password,
+            updatedAt: Date.now(),
+        };
+
+        await userRepository.update(idUser, user)
+        .then(() => {
+            res.send("Se actualizo el usuario.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+            return;
+        });
+
     }
 
-    async findAllUsers() {
-        let result = await userRepository.findAll();
-
-        if (result === undefined) {
-            throw new Error("No hay usuarios registrados");
-        }
-        return result;
+    async findById(req, res) {
+        const idUser = req.params.id;
+        await userRepository.findById(idUser)
+        .then((user) => {
+            res.send("Se encontro el usuario: " + JSON.stringify(user, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
     }
 
-    async delete(idUser){
-        await userRepository.delete(idUser);
+    async findAll(req, res) {
+        await userRepository.findAll()
+        .then((users) => {
+            res.send("Usuarios encontrados: " + JSON.stringify(users, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+
+    }
+
+    async delete(req, res){
+        const idUser = req.params.id;
+
+        await userRepository.delete(idUser)
+        .then(() => {
+            res.send("Se elimino el usuario.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+        
     }
 }

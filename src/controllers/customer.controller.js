@@ -3,41 +3,107 @@ import { CustomerRepository } from '../data/repositories/customer.repository.js'
 const customerRepository = new CustomerRepository();
 
 export class CustomerController {
-    async createCustomer(customer) {
-        await customerRepository.create(customer);
-    }
-
-    async updateCustomer(idCustomer, customerData) {
-        let customerUpdate = await customerRepository.findById(idCustomer);
-        if(customerUpdate === undefined){
-            throw new Error("El cliente no se encuentra definido y no se puede actualizar");
-        }
-        else if(customerUpdate === null){
-            throw new Error("El cliente es nulo y no se puede actualizar");
+    async create(req, res) {
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos del cliente'
+            });
+            return;
         }
 
-        await customerRepository.update(idCustomer, customerData);
-    }
+        // Create customer
+        const customer = {
+            name: req.body.name,
+            lastName: req.body.lastName,
+            phone: req.body.phone,
+            address: req.body.address,
+        };
 
-    async findByIdCustomer(idCustomer) {
-        let result = await customerRepository.findById(idCustomer);
+        // Save customer in database
+        await customerRepository.create(
+            customer
+        ).then((customer) => {
+            res.send("Se creo el cliente: " + JSON.stringify(customer, null, 4));
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
 
-        if (result === undefined) {
-            throw new Error("El cliente no existe");
+    };
+
+    async update(req, res) {
+        const idCustomer = req.params.id;
+
+        // Validate request
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos a editar del cliente'
+            });
+            return;
         }
-        return result;
+
+        // Create customer
+        const customer = {
+            name: req.body.name,
+            lastName: req.body.lastName,
+            phone: req.body.phone,
+            address: req.body.address,
+            updatedAt: Date.now(),
+        };
+
+        await customerRepository.update(idCustomer, customer)
+        .then(() => {
+            res.send("Se actualizo el cliente.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+            return;
+        });
+
     }
 
-    async findAllCustomers() {
-        let result = await customerRepository.findAll();
-
-        if (result === undefined) {
-            throw new Error("No hay clientes registrados");
-        }
-        return result;
+    async findById(req, res) {
+        const idCustomer = req.params.id;
+        await customerRepository.findById(idCustomer)
+        .then((customer) => {
+            res.send("Se encontro el cliente: " + JSON.stringify(customer, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
     }
 
-    async delete(idCustomer){
-        await customerRepository.delete(idCustomer);
+    async findAll(req, res) {
+        await customerRepository.findAll()
+        .then((customers) => {
+            res.send("Clientes encontrados: " + JSON.stringify(customers, null, 4));
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+
+    }
+
+    async delete(req, res){
+        const idCustomer = req.params.id;
+
+        await customerRepository.delete(idCustomer)
+        .then(() => {
+            res.send("Se elimino el cliente.");
+        })
+        .catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+        
     }
 }
