@@ -56,4 +56,23 @@ export class UserRepository {
         });
     };
 
+    verify = async (username, password) => {
+        return await User.findOne({
+            where: {
+                username: username,
+                password: password
+            }
+        }).then((user) => {
+
+            if(user != null){
+                console.log("Se verifico el usuario: " + username);
+                return user;
+            }
+
+        }).catch((err) => {
+            console.error("Error al  el usuario: ", err);
+        });
+    };
+
+
 }

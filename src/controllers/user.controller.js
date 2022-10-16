@@ -1,6 +1,8 @@
 import { UserRepository } from '../data/repositories/user.repository.js';
+import { MiddlewareJWT } from '../jwt/middleware-jwt.js';
 
 const userRepository = new UserRepository();
+const middlewareJWT = new MiddlewareJWT();
 
 export class UserController {
     async create(req, res) {
@@ -100,6 +102,31 @@ export class UserController {
                 message: 'No se pudo conectar con la base de datos.'
             });
         });
-        
     }
+
+    async verify (req, res) {
+        if(!Object.keys (req.body).length) {
+            res.status(400).send({
+                message: 'Se necesitan los datos completos del usuario'
+            });
+            return;
+        }
+
+        const user = {
+            username: req.body.username,
+            password: req.body.password,
+        };
+
+        await userRepository.verify(user.username,user.password)
+        .then(() => {
+            const token = middlewareJWT.createJWT(user);
+            res.send('Token: ' + token);
+        }).catch(() => {
+            res.status(500).send({
+                message: 'No se pudo conectar con la base de datos.'
+            });
+        });
+    }
+
+
 }
