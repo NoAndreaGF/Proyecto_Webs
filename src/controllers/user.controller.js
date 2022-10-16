@@ -40,4 +40,14 @@ export class UserController {
     async delete(idUser){
         await userRepository.delete(idUser);
     }
+
+    async verifyUser (username, password) {
+        let result = await userRepository.verify(username,password);
+
+        if (result === undefined) {
+            throw new Error("El usuario no existe");
+        }
+        
+        return result;
+    }
 }
