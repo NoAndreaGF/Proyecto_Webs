@@ -1,11 +1,24 @@
 import { ProductRepository } from '../data/repositories/product.repository.js';
+import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
 
 const productRepository = new ProductRepository();
+const middlewareJWT = new MiddlewareJWT();
 
 export class ProductController {
     async create(req, res) {
+
         // Validate request
-        if(!Object.keys (req.body).length) {
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
+            });
+
+        middlewareJWT.verifyJWT(token);
+
+        if (!Object.keys(req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos completos del producto'
             });
@@ -38,7 +51,17 @@ export class ProductController {
         const idProduct = req.params.id;
 
         // Validate request
-        if(!Object.keys (req.body).length) {
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
+            });
+
+        middlewareJWT.verifyJWT(token);
+
+        if (!Object.keys(req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos a editar del producto'
             });
@@ -56,56 +79,91 @@ export class ProductController {
         };
 
         await productRepository.update(idProduct, product)
-        .then(() => {
-            res.send("Se actualizo el producto.");
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+            .then(() => {
+                res.send("Se actualizo el producto.");
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+                return;
             });
-            return;
-        });
 
     }
 
     async findById(req, res) {
         const idProduct = req.params.id;
-        await productRepository.findById(idProduct)
-        .then((product) => {
-            res.send("Se encontro el producto: " + JSON.stringify(product, null, 4));
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+
+        // Validate request
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
             });
-        });
+
+        middlewareJWT.verifyJWT(token);
+
+        await productRepository.findById(idProduct)
+            .then((product) => {
+                res.send("Se encontro el producto: " + JSON.stringify(product, null, 4));
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+            });
     }
 
     async findAll(req, res) {
-        await productRepository.findAll()
-        .then((products) => {
-            res.send("Productos encontrados: " + JSON.stringify(products, null, 4));
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+
+        // Validate request
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
             });
-        });
+
+        middlewareJWT.verifyJWT(token);
+
+        await productRepository.findAll()
+            .then((products) => {
+                res.send("Productos encontrados: " + JSON.stringify(products, null, 4));
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+            });
 
     }
 
-    async delete(req, res){
+    async delete(req, res) {
         const idProduct = req.params.id;
 
-        await productRepository.delete(idProduct)
-        .then(() => {
-            res.send("Se elimino el producto.");
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+        // Validate request
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
             });
-        });
-        
+
+        middlewareJWT.verifyJWT(token);
+
+        await productRepository.delete(idProduct)
+            .then(() => {
+                res.send("Se elimino el producto.");
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+            });
+
     }
 }

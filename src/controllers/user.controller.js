@@ -5,9 +5,10 @@ const userRepository = new UserRepository();
 const middlewareJWT = new MiddlewareJWT();
 
 export class UserController {
+
     async create(req, res) {
         // Validate request
-        if(!Object.keys (req.body).length) {
+        if (!Object.keys(req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos completos del usuario'
             });
@@ -34,15 +35,26 @@ export class UserController {
     };
 
     async update(req, res) {
+
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
+            });
+
         const idUser = req.params.id;
 
         // Validate request
-        if(!Object.keys (req.body).length) {
+        if (!Object.keys(req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos a editar del usuario'
             });
             return;
         }
+
+        middlewareJWT.verifyJWT(token);
 
         // Create user
         const user = {
@@ -52,60 +64,94 @@ export class UserController {
         };
 
         await userRepository.update(idUser, user)
-        .then(() => {
-            res.send("Se actualizo el usuario.");
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+            .then(() => {
+                res.send("Se actualizo el usuario.");
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+                return;
             });
-            return;
-        });
 
     }
 
     async findById(req, res) {
+
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
+            });
+
+        middlewareJWT.verifyJWT(token);
+
         const idUser = req.params.id;
         await userRepository.findById(idUser)
-        .then((user) => {
-            res.send("Se encontro el usuario: " + JSON.stringify(user, null, 4));
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+            .then((user) => {
+                res.send("Se encontro el usuario: " + JSON.stringify(user, null, 4));
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
             });
-        });
     }
 
     async findAll(req, res) {
-        await userRepository.findAll()
-        .then((users) => {
-            res.send("Usuarios encontrados: " + JSON.stringify(users, null, 4));
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
             });
-        });
+
+        middlewareJWT.verifyJWT(token);
+
+        await userRepository.findAll()
+            .then((users) => {
+                res.send("Usuarios encontrados: " + JSON.stringify(users, null, 4));
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+            });
 
     }
 
-    async delete(req, res){
+    async delete(req, res) {
+
+        const token = req.headers['x-access-token'];
+
+        if (!token) return res.status(401)
+            .send({
+                auth: false,
+                message: 'No token provided.'
+            });
+
+        middlewareJWT.verifyJWT(token);
+
         const idUser = req.params.id;
 
         await userRepository.delete(idUser)
-        .then(() => {
-            res.send("Se elimino el usuario.");
-        })
-        .catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+            .then(() => {
+                res.send("Se elimino el usuario.");
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
             });
-        });
     }
 
-    async verify (req, res) {
-        if(!Object.keys (req.body).length) {
+    async verify(req, res) {
+       
+        if (!Object.keys(req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos completos del usuario'
             });
@@ -117,16 +163,15 @@ export class UserController {
             password: req.body.password,
         };
 
-        await userRepository.verify(user.username,user.password)
-        .then(() => {
-            const token = middlewareJWT.createJWT(user);
-            res.send('Token: ' + token);
-        }).catch(() => {
-            res.status(500).send({
-                message: 'No se pudo conectar con la base de datos.'
+        await userRepository.verify(user.username, user.password)
+            .then(() => {
+                const token = middlewareJWT.createJWT(user);
+                res.send("Token: " + token);
+            }).catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
             });
-        });
     }
-
 
 }
