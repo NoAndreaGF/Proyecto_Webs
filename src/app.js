@@ -1,4 +1,5 @@
-import express from 'express'
+import express from 'express';
+import { morganMiddleware } from './middlewares/morgan.middleware.js';
 import { customersRouter } from './routes/customers.route.js';
 import { insRouter } from './routes/ins.route.js';
 import { ordersRouter } from './routes/orders.route.js';
@@ -8,8 +9,12 @@ import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
 import { usersRouter } from './routes/users.route.js';
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 2526;
 const app = express();
+
+
+//middleware en morgan para logs
+app.use(morganMiddleware);
 
 app.use('/customers', customersRouter);
 app.use('/ins', insRouter);
