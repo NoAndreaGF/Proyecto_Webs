@@ -9,15 +9,6 @@ export class InRepository {
     };
 
     async update(idIn, inData) {
-        let inUpdate = await In.findByPk(idIn);
-        // Validation
-        if(inUpdate === undefined){
-            throw new Error("La entrada no se encuentra definida y no se puede actualizar");
-        }
-        else if(inUpdate === null){
-            throw new Error("La entrada es nula y no se puede actualizar");
-        }
-
         await In.update(inData, {
             where: {
                 idIn
@@ -26,28 +17,16 @@ export class InRepository {
     };
 
     async findById(idIn) {
-        let result = await In.findByPk(idIn, {
+        return await In.findByPk(idIn, {
             include:["product"]
         });
-
-        // Validation
-        if (result === null) {
-            throw new Error("La entrada no existe");
-        }
-        return result;
     };
 
     async findAll() {
-        let result = await In.findAll({
+        return await In.findAll({
             attributes: ["idIn", "quantity", "date", "createdAt", "updatedAt"],
             include:["product"],
         });
-
-        // Validation
-        if (result === null) {
-            throw new Error("No hay entradas registradas");
-        }
-        return result;
     };
 
     async delete(idIn) {

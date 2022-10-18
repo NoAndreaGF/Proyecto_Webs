@@ -8,12 +8,10 @@ import { productsRouter } from './routes/products.route.js';
 import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
 import { usersRouter } from './routes/users.route.js';
 
-
 const port = process.env.PORT || 2526;
 const app = express();
 
-
-//middleware en morgan para logs
+// Middleware en morgan para logs
 app.use(morganMiddleware);
 
 app.use('/customers', customersRouter);
@@ -23,7 +21,6 @@ app.use('/outs', outsRouter);
 app.use('/products', productsRouter);
 app.use('/relProductOrders', relProductOrdersRouter);
 app.use('/users', usersRouter);
-
 
 app.listen(port, ()=> {
     console.log(`El server esta en linea en el puerto: ${port}`);

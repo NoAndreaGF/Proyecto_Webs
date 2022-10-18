@@ -6,7 +6,7 @@ export class MiddlewareJWT {
 
     createJWT(user) {
         const token = sign(user, llave, {
-            expiresIn: 1440
+            expiresIn: 864000
         });
 
         return token;
