@@ -1,5 +1,5 @@
 import { OrderRepository } from '../data/repositories/order.repository.js';
-import { MiddlewareJWT } from '../jwt/middleware-jwt.js';
+import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
 
 const orderRepository = new OrderRepository();
 const middlewareJWT = new MiddlewareJWT();

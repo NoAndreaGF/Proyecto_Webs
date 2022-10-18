@@ -1,5 +1,5 @@
 import { OutRepository } from '../data/repositories/out.repository.js';
-import { MiddlewareJWT } from '../jwt/middleware-jwt.js';
+import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
 
 const outRepository = new OutRepository();
 const middlewareJWT = new MiddlewareJWT();
