@@ -7,12 +7,14 @@ import { outsRouter } from './routes/outs.route.js';
 import { productsRouter } from './routes/products.route.js';
 import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
 import { usersRouter } from './routes/users.route.js';
+import {JWTMiddleware} from './middlewares/jwt.middleware.js';
 
-const port = process.env.PORT || 2526;
+const port = process.env.PORT || 3000;
 const app = express();
 
 // Middleware en morgan para logs
 app.use(morganMiddleware);
+app.use(JWTMiddleware);
 
 app.use('/customers', customersRouter);
 app.use('/ins', insRouter);

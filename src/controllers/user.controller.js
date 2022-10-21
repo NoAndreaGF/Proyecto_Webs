@@ -1,8 +1,8 @@
 import { UserRepository } from '../data/repositories/user.repository.js';
-import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
+import {ManagerJWT} from '../jwt/jwt.manager.js';
 
 const userRepository = new UserRepository();
-const middlewareJWT = new MiddlewareJWT();
+const JWTManager = new ManagerJWT();
 
 export class UserController {
 
@@ -36,14 +36,6 @@ export class UserController {
 
     async update(req, res) {
 
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
         const idUser = req.params.id;
 
         // Validate request
@@ -53,8 +45,6 @@ export class UserController {
             });
             return;
         }
-
-        middlewareJWT.verifyJWT(token);
 
         // Create user
         const user = {
@@ -78,16 +68,6 @@ export class UserController {
 
     async findById(req, res) {
 
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
         const idUser = req.params.id;
         await userRepository.findById(idUser)
             .then((user) => {
@@ -102,16 +82,6 @@ export class UserController {
 
     async findAll(req, res) {
 
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
         await userRepository.findAll()
             .then((users) => {
                 res.send("Usuarios encontrados: " + JSON.stringify(users, null, 4));
@@ -125,16 +95,6 @@ export class UserController {
     }
 
     async delete(req, res) {
-
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         const idUser = req.params.id;
 
@@ -165,7 +125,7 @@ export class UserController {
 
         await userRepository.verify(user.username, user.password)
             .then(() => {
-                const token = middlewareJWT.createJWT(user);
+                const token = JWTManager.createJWT(user);
                 res.send("Token: " + token);
             }).catch(() => {
                 res.status(500).send({

@@ -1,20 +1,27 @@
-import pkg from 'jsonwebtoken';
-const { sign, verify} = pkg;
-import { llave } from '../configs/config.js'
+import jwt from 'jsonwebtoken';
+import { llave } from '../configs/config.js';
 
-export class MiddlewareJWT {
+export { JWTMiddleware };
 
-    createJWT(user) {
-        const token = sign(user, llave, {
-            expiresIn: 864000
+var whitelist = ['/users/verifyGET','/usersPOST']
+
+const JWTMiddleware = (req, res, next) => {
+
+    const token = req.headers['x-access-token'];
+    if (!token) {
+        if(whitelist.includes(req.url + req.method)){
+            next();
+        }else {
+            res.status(401).send('Token requerido!');
+        }
+    } else {
+
+        jwt.verify(token, llave, (err, decoded) => {
+            if (err) {
+                res.status(401).send('Autorizacion fallida!');
+            }
+            next();
         });
-
-        return token;
     }
 
-    verifyJWT (token) {
-        verify(token,llave);
-        return ("Se verifico el token.");
-    }
-      
-}
+};

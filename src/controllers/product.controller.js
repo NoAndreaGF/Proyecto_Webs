@@ -1,22 +1,9 @@
 import { ProductRepository } from '../data/repositories/product.repository.js';
-import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
 
 const productRepository = new ProductRepository();
-const middlewareJWT = new MiddlewareJWT();
 
 export class ProductController {
     async create(req, res) {
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         if (!Object.keys(req.body).length) {
             res.status(400).send({
@@ -50,17 +37,6 @@ export class ProductController {
     async update(req, res) {
         const idProduct = req.params.id;
 
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
         if (!Object.keys(req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos a editar del producto'
@@ -92,19 +68,7 @@ export class ProductController {
     }
 
     async findById(req, res) {
-        const idProduct = req.params.id;
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
+        
         await productRepository.findById(idProduct)
             .then((product) => {
                 res.send("Se encontro el producto: " + JSON.stringify(product, null, 4));
@@ -117,17 +81,6 @@ export class ProductController {
     }
 
     async findAll(req, res) {
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         await productRepository.findAll()
             .then((products) => {
@@ -143,17 +96,6 @@ export class ProductController {
 
     async delete(req, res) {
         const idProduct = req.params.id;
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         await productRepository.delete(idProduct)
             .then(() => {

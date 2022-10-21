@@ -1,22 +1,10 @@
 import { CustomerRepository } from '../data/repositories/customer.repository.js';
-import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
 
 const customerRepository = new CustomerRepository();
-const middlewareJWT = new MiddlewareJWT();
 
 export class CustomerController {
     async create(req, res) {
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
+      
         if(!Object.keys (req.body).length) {
             res.status(400).send({
                 message: 'Se necesitan los datos completos del cliente'
@@ -47,18 +35,6 @@ export class CustomerController {
 
     async update(req, res) {
         const idCustomer = req.params.id;
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
 
         if(!Object.keys (req.body).length) {
             res.status(400).send({
@@ -91,17 +67,6 @@ export class CustomerController {
 
     async findById(req, res) {
 
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
         const idCustomer = req.params.id;
         await customerRepository.findById(idCustomer)
         .then((customer) => {
@@ -116,17 +81,6 @@ export class CustomerController {
 
     async findAll(req, res) {
 
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
         await customerRepository.findAll()
         .then((customers) => {
             res.send("Clientes encontrados: " + JSON.stringify(customers, null, 4));
@@ -140,17 +94,6 @@ export class CustomerController {
     }
 
     async delete(req, res){
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         const idCustomer = req.params.id;
 

@@ -1,22 +1,10 @@
 import { OrderRepository } from '../data/repositories/order.repository.js';
-import { MiddlewareJWT } from '../middlewares/jwt.middleware.js';
 
 const orderRepository = new OrderRepository();
-const middlewareJWT = new MiddlewareJWT();
+
 
 export class OrderController {
     async create(req, res) {
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         if (!Object.keys(req.body).length) {
             res.status(400).send({
@@ -49,17 +37,6 @@ export class OrderController {
 
     async update(req, res) {
         const idOrder = req.params.id;
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         if (!Object.keys(req.body).length) {
             res.status(400).send({
@@ -94,17 +71,6 @@ export class OrderController {
     async findById(req, res) {
         const idOrder = req.params.id;
 
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
-
         await orderRepository.findById(idOrder)
             .then((order) => {
                 res.send("Se encontro la orden: " + JSON.stringify(order, null, 4));
@@ -117,17 +83,6 @@ export class OrderController {
     }
 
     async findAll(req, res) {
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         await orderRepository.findAll()
             .then((orders) => {
@@ -143,17 +98,6 @@ export class OrderController {
 
     async delete(req, res) {
         const idOrder = req.params.id;
-
-        // Validate request
-        const token = req.headers['x-access-token'];
-
-        if (!token) return res.status(401)
-            .send({
-                auth: false,
-                message: 'No token provided.'
-            });
-
-        middlewareJWT.verifyJWT(token);
 
         await orderRepository.delete(idOrder)
             .then(() => {
