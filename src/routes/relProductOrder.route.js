@@ -2,8 +2,6 @@ import express from 'express';
 import { RelProductOrderController } from '../controllers/relProductOrder.controller.js';
 
 const relProductOrdersRouter = express.Router();
-relProductOrdersRouter.use(express.urlencoded({extended:true}));
-relProductOrdersRouter.use(express.json());
 
 const relProductOrderController = new RelProductOrderController();
 

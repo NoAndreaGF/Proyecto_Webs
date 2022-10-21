@@ -9,12 +9,16 @@ import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
 import { usersRouter } from './routes/users.route.js';
 import {JWTMiddleware} from './middlewares/jwt.middleware.js';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 2526;
 const app = express();
 
 // Middleware en morgan para logs
 app.use(morganMiddleware);
 app.use(JWTMiddleware);
+
+// Parse request middleware
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 
 app.use('/customers', customersRouter);
 app.use('/ins', insRouter);

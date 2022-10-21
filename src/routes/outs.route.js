@@ -2,8 +2,6 @@ import express from 'express';
 import { OutController } from '../controllers/out.controller.js';
 
 const outsRouter = express.Router();
-outsRouter.use(express.urlencoded({extended:true}));
-outsRouter.use(express.json());
 
 const outController = new OutController();
 

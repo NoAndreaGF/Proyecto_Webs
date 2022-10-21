@@ -2,8 +2,6 @@ import express from 'express';
 import { CustomerController } from '../controllers/customer.controller.js';
 
 const customersRouter = express.Router();
-customersRouter.use(express.urlencoded({extended:true}));
-customersRouter.use(express.json());
 
 const customerController = new CustomerController();
 

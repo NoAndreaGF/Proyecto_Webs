@@ -2,8 +2,6 @@ import express from 'express';
 import { InController } from '../controllers/in.controller.js';
 
 const insRouter = express.Router();
-insRouter.use(express.urlencoded({extended:true}));
-insRouter.use(express.json());
 
 const inController = new InController();
 

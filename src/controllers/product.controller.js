@@ -69,6 +69,7 @@ export class ProductController {
 
     async findById(req, res) {
         
+        const idProduct = req.params.id;
         await productRepository.findById(idProduct)
             .then((product) => {
                 res.send("Se encontro el producto: " + JSON.stringify(product, null, 4));
