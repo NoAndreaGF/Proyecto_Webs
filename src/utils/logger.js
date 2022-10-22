@@ -1,6 +1,6 @@
 import winston from 'winston';
 
-// Niveles de severidad de los errores
+// Levels of the logs
 const levels = {
   error: 0,
   warn: 1,
@@ -15,8 +15,7 @@ const level = () => {
   return isDevelopment ? 'debug' : 'warn'
 };
 
-
-//Añadimos colores a los niveles de winston
+// We select colors to shown the messages on console
 const colors = {
   error: 'red',
   warn: 'yellow',
@@ -29,30 +28,23 @@ winston.addColors(colors);
 
 
 const format = winston.format.combine(
-  // Formato de hora que se estará utilizando
+  // Format date
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-  // TColor de los mensajes en consola
+  // TColor messages on console
   winston.format.colorize({ all: true }),
-  // Formato
+  // Format of the information of the logs 
   winston.format.printf(
     (info) => `${info.timestamp} ${info.level}: ${info.message}`,
   ),
 );
 
-// Como se muestran las acciones
 const transports = [
-  // Mostrar mensaje en la consola
+  // Show message on console
   new winston.transports.Console(),
-  // Guardar marca de error en el archivo errores
-  new winston.transports.File({
-    filename: 'logs/error.log',
-    level: 'error',
-  }),
-  // Guardar todas las acciones
-  new winston.transports.File({ filename: 'logs/all.log' }),
+  // Save of logs in the file all.log that is located in the folder logs
+  new winston.transports.File({ filename: 'src/middlewares/logs/all.log' }),
 ];
 
-// Instancia que será utilizada en el middleware de morgan
 export const logger = winston.createLogger({
   level: level(),
   levels,
