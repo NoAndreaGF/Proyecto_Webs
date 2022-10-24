@@ -1,1 +1,15 @@
 ::1 POST /products 500 55 - 450.984 ms
+::1 POST /users 500 55 - 14.371 ms
+::1 DELETE /users/ 401 16 - 0.386 ms
+::1 DELETE /users/ 404 148 - 1.348 ms
+::1 DELETE /users/ 404 148 - 1.348 ms
+::1 DELETE /users/ 404 148 - 0.531 ms
+::1 DELETE /users/ 404 148 - 0.531 ms
+::1 DELETE /users/ 404 148 - 0.254 ms
+::1 DELETE /users/ 404 148 - 0.254 ms
+::1 DELETE /users/ 404 148 - 0.150 ms
+::1 DELETE /users/ 404 148 - 0.150 ms
+::1 DELETE /users/ 404 148 - 0.332 ms
+::1 DELETE /users/ 404 148 - 0.332 ms
+::1 DELETE /users/ 404 148 - 0.164 ms
+::1 DELETE /users/ 404 148 - 0.164 ms

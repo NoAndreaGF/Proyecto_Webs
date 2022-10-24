@@ -16,6 +16,6 @@ const validationOrder = async(req,res,next) =>{
     next();
 }
 
-export default {
+export  {
     validationOrder
 }

@@ -1,21 +1,20 @@
 import express from 'express';
 import { InController } from '../controllers/in.controller.js';
-import { InValidation } from '../validators/validationIn';
-import { generalValidation } from '../validators/general.validation';
+import { validationIn } from '../validators/in.validation.js';
+import { generalValidation } from '../validators/general.validation.js';
 
 const insRouter = express.Router();
 
-const validationIn = new InValidation();
 const inController = new InController();
 
-insRouter.post('/', validationIn.validationIn, inController.create);
+insRouter.post('/', validationIn, inController.create);
 
 insRouter.get('/', inController.findAll);
 
-insRouter.get('/:id', generalValidation.generalValidation, inController.findById);
+insRouter.get('/:id', generalValidation, inController.findById);
 
-insRouter.patch('/:id', generalValidation.generalValidation, validationIn.validationIn, inController.update);
+insRouter.patch('/:id', generalValidation, validationIn, inController.update);
 
-insRouter.delete('/:id', generalValidation.generalValidation, inController.delete);
+insRouter.delete('/:id', generalValidation, inController.delete);
 
 export { insRouter };

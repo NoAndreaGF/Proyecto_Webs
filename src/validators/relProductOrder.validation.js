@@ -14,6 +14,6 @@ const validationRel = async(req,res,next) =>{
     next();
 }
 
-export default {
+export  {
     validationRel
 }

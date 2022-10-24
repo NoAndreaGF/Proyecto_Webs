@@ -1,20 +1,20 @@
 import express from 'express';
 import { OrderController } from '../controllers/order.controller.js';
-import { orderValidation } from '../validators/order.validation.js';
-import { generalValidation } from '../validators/general.validation';
+import { validationOrder } from '../validators/order.validation.js';
+import { generalValidation } from '../validators/general.validation.js';
 
 const ordersRouter = express.Router();
 
 const orderController = new OrderController();
 
-ordersRouter.post('/', orderValidation.orderValidation,orderController.create);
+ordersRouter.post('/', validationOrder,orderController.create);
 
 ordersRouter.get('/', orderController.findAll);
 
-ordersRouter.get('/:id', generalValidation.generalValidation, orderController.findById);
+ordersRouter.get('/:id', generalValidation, orderController.findById);
 
-ordersRouter.patch('/:id', generalValidation.generalValidation, orderValidation.orderValidation, orderController.update);
+ordersRouter.patch('/:id', generalValidation, validationOrder, orderController.update);
 
-ordersRouter.delete('/:id', generalValidation.generalValidation, orderController.delete);
+ordersRouter.delete('/:id', generalValidation, orderController.delete);
 
 export { ordersRouter };

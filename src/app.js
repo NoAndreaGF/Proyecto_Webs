@@ -10,7 +10,7 @@ import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
 import { usersRouter } from './routes/users.route.js';
 import {JWTMiddleware} from './middlewares/jwt.middleware.js';
 
-const port = process.env.PORT || 2526;
+const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(logMiddleware);

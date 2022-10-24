@@ -1,7 +1,7 @@
 import {check, validationResult} from 'express-validator';
 
 
-const validationCostumer = async(req,res,next) =>{
+export const validationCostumer = async(req,res,next) =>{
     
     await check('name','Nombre invalido').notEmpty().isLength({max:30}).isString().run(req);
     await check('lastName','Apellido invalido').notEmpty().isLength({max:20}).isString().run(req);
@@ -17,6 +17,3 @@ const validationCostumer = async(req,res,next) =>{
     next();
 }
 
-export default {
-    validationCostumer
-}

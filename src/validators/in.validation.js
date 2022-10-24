@@ -14,6 +14,6 @@ const validationIn = async(req,res,next) =>{
     next();
 }
 
-export default {
+export  {
     validationIn
 }
