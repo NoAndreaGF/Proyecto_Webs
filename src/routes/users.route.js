@@ -1,5 +1,7 @@
 import express from 'express';
 import { UserController } from '../controllers/user.controller.js';
+import { validationUser } from '../validators/user.validator.js';
+import { generalValidation } from '../validators/general.validation';
 
 const usersRouter = express.Router();
 
@@ -7,14 +9,14 @@ const userController = new UserController();
 
 usersRouter.get('/verify', userController.verify);
 
-usersRouter.post('/', userController.create);
+usersRouter.post('/', validationUser.validationUser, userController.create);
 
 usersRouter.get('/', userController.findAll);
 
-usersRouter.get('/:id', userController.findById);
+usersRouter.get('/:id', generalValidation.generalValidation, userController.findById);
 
-usersRouter.patch('/:id', userController.update);
+usersRouter.patch('/:id', generalValidation.generalValidation, validationUser.validationUser, userController.update);
 
-usersRouter.delete('/:id', userController.delete);
+usersRouter.delete('/:id', generalValidation.generalValidation, userController.delete);
 
 export { usersRouter };

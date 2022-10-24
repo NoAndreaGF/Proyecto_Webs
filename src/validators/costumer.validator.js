@@ -1,5 +1,6 @@
 import {check, validationResult} from 'express-validator';
 
+
 const validationCostumer = async(req,res,next) =>{
     
     await check('name','Nombre invalido').notEmpty().isLength({max:30}).isString().run(req);
