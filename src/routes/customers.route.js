@@ -1,19 +1,18 @@
 import express from 'express';
 import { CustomerController } from '../controllers/customer.controller.js';
-import { validationCostumer } from '../validators/costumer.validator.js';
-import { generalValidation } from '../validators/general.validation.js';
+import { custumerCreate, custumerUpdate, custumerDelete } from '../validators/custumer.validator.js';
 
 const customersRouter = express.Router();
 const customerController = new CustomerController();
 
-customersRouter.post('/', validationCostumer, customerController.create);
+customersRouter.post('/', custumerCreate, customerController.create);
 
 customersRouter.get('/', customerController.findAll);
 
-customersRouter.get('/:id', generalValidation, customerController.findById);
+customersRouter.get('/:id', customerController.findById);
 
-customersRouter.patch('/:id', generalValidation,validationCostumer, customerController.update);
+customersRouter.patch('/:id', custumerUpdate, customerController.update);
 
-customersRouter.delete('/:id', generalValidation, customerController.delete);
+customersRouter.delete('/:id', customerController.delete).use(custumerDelete);
 
 export { customersRouter };
