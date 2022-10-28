@@ -1,20 +1,19 @@
 import express from 'express';
 import { RelProductOrderController } from '../controllers/relProductOrder.controller.js';
-import { validationRel } from '../validators/relProductOrder.validation.js';
-import { generalValidation } from '../validators/general.validation.js';
+import { relCreate, relUpdate, relDelete } from '../validators/relProductOrder.validation.js';
 
 const relProductOrdersRouter = express.Router();
 
 const relProductOrderController = new RelProductOrderController();
 
-relProductOrdersRouter.post('/', validationRel, relProductOrderController.create);
+relProductOrdersRouter.post('/', relCreate, relProductOrderController.create);
 
 relProductOrdersRouter.get('/', relProductOrderController.findAll);
 
-relProductOrdersRouter.get('/:id', generalValidation, relProductOrderController.findById);
+relProductOrdersRouter.get('/:id', relProductOrderController.findById);
 
-relProductOrdersRouter.patch('/:id', generalValidation, validationRel, relProductOrderController.update);
+relProductOrdersRouter.patch('/:id', relUpdate, relProductOrderController.update);
 
-relProductOrdersRouter.delete('/:id', generalValidation, relProductOrderController.delete);
+relProductOrdersRouter.delete('/:id', relProductOrderController.delete).use(relDelete);
 
 export { relProductOrdersRouter };

@@ -1,12 +1,42 @@
-import {check, validationResult} from 'express-validator';
+import {body, param, validationResult} from 'express-validator';
 
-const validationProduct = async(req,res,next) =>{
+const productCreate = async(req,res,next) =>{
     
-    await check('name','Nombre invalido').notEmpty().isString().isLength({max:30}).run(req);
-    await check('brand','Marca invalida').notEmpty().isString().isLength({max:20}).run(req);
-    await check('description','Descripcion invalida').notEmpty().isString().isLength({max:100}).run(req);
-    await check('price','Precio invalido').notEmpty().isFloat().run(req);
-    await check('stock','Inventario invalido').notEmpty().isInt().run(req);
+    await body('name','Nombre invalido').notEmpty().isString().isLength({max:30}).run(req);
+    await body('brand','Marca invalida').notEmpty().isString().isLength({max:20}).run(req);
+    await body('description','Descripcion invalida').notEmpty().isString().isLength({max:100}).run(req);
+    await body('price','Precio invalido').notEmpty().isFloat().run(req);
+    await body('stock','Inventario invalido').notEmpty().isInt().run(req);
+
+    let result = validationResult(req);
+
+    if(!result.isEmpty()){
+        return res.send(result);
+    }
+
+    next();
+}
+
+const productUpdate = async(req,res,next) =>{
+    await param('id', 'Id invalido').isString().exists().run(req);
+    
+    await body('name','Nombre invalido').optional().isString().isLength({max:30}).run(req);
+    await body('brand','Marca invalida').optional().isString().isLength({max:20}).run(req);
+    await body('description','Descripcion invalida').optional().isString().isLength({max:100}).run(req);
+    await body('price','Precio invalido').optional().isFloat().run(req);
+    await body('stock','Inventario invalido').optional().isInt().run(req);
+
+    let result = validationResult(req);
+
+    if(!result.isEmpty()){
+        return res.send(result);
+    }
+
+    next();
+}
+
+const productDelete = async(req,res,next) => {
+    await param('id', 'Id invalido').isString().exists().run(req);
 
     let result = validationResult(req);
 
@@ -18,5 +48,7 @@ const validationProduct = async(req,res,next) =>{
 }
 
 export  {
-    validationProduct
+    productCreate,
+    productUpdate,
+    productDelete
 }

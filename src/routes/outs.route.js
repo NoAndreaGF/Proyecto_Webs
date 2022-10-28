@@ -1,20 +1,19 @@
 import express from 'express';
 import { OutController } from '../controllers/out.controller.js';
-import { validationOut } from '../validators/out.validation.js';
-import { generalValidation } from '../validators/general.validation.js';
+import { outCreate, outUpdate, outDelete } from '../validators/out.validation.js';
 
 const outsRouter = express.Router();
 
 const outController = new OutController();
 
-outsRouter.post('/', validationOut, outController.create);
+outsRouter.post('/', outCreate, outController.create);
 
 outsRouter.get('/', outController.findAll);
 
-outsRouter.get('/:id', generalValidation, outController.findById);
+outsRouter.get('/:id', outController.findById);
 
-outsRouter.patch('/:id', generalValidation, validationOut, outController.update);
+outsRouter.patch('/:id', outUpdate, outController.update);
 
-outsRouter.delete('/:id', generalValidation, outController.delete);
+outsRouter.delete('/:id', outController.delete).use(outDelete);
 
 export { outsRouter };

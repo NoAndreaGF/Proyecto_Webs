@@ -16,7 +16,7 @@ const custumerCreate = async(req,res,next) => {
 }
 
 const custumerUpdate = async(req,res,next) => {
-    await param('id', 'Id invalido').isString().exists().run(req);
+    await param('id', 'Id invalido').isInt().exists().run(req);
 
     await body('name','Nombre invalido').optional().isLength({max:30}).isString().run(req);
     await body('lastName','Apellido invalido').optional().isLength({max:20}).isString().run(req);
@@ -33,7 +33,8 @@ const custumerUpdate = async(req,res,next) => {
 }
 
 const custumerDelete = async(req,res,next) => {
-    await param('id', 'Id invalido').isString().exists().run(req);
+    await param('id', 'Id invalido').isInt
+    ().exists().run(req);
 
     let result = validationResult(req);
 

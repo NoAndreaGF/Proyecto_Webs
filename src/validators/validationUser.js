@@ -1,4 +1,4 @@
-import {check, validationResult} from 'express-validator';
+import {check, param, validationResult} from 'express-validator';
 
 const validationUser = async(req,res,next) =>{
     

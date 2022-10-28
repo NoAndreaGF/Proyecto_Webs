@@ -1,11 +1,42 @@
-import {check, validationResult} from 'express-validator';
+import {body, param, validationResult} from 'express-validator';
 
-const validationOrder = async(req,res,next) =>{
+const orderCreate = async(req,res,next) =>{
     
-    await check('orderDate','Fecha de orden invalida').notEmpty().isDate().run(req);
-    await check('deliveryDate','Fecha de entrega invalida').notEmpty().isDate().run(req);
-    await check('status','Estado invalido').notEmpty().isString().isLength({max:20}).run(req);
-    await check('totalAmount','Monto total invalido').notEmpty().isFloat().run(req);
+    await body('orderDate','Fecha de orden invalida').notEmpty().isISO8601().run(req);
+    await body('deliveryDate','Fecha de entrega invalida').notEmpty().isISO8601().run(req);
+    await body('status','Estado invalido').notEmpty().isString().isLength({max:20}).run(req);
+    await body('totalAmount','Monto total invalido').notEmpty().isFloat().run(req);
+    await body('idCustomer', 'Se necesita un cliente').notEmpty().isInt().run(req);
+
+    let result = validationResult(req);
+
+    if(!result.isEmpty()){
+        return res.send(result);
+    }
+
+    next();
+}
+
+const orderUpdate = async(req,res,next) =>{
+    await param('id', 'Id invalido').isString().exists().run(req);
+    
+    await body('orderDate','Fecha de orden invalida').optional().isISO8601().run(req);
+    await body('deliveryDate','Fecha de entrega invalida').optional().isISO8601().run(req);
+    await body('status','Estado invalido').optional().isString().isLength({max:20}).run(req);
+    await body('totalAmount','Monto total invalido').optional().isFloat().run(req);
+    await body('idCustomer', 'Se necesita un cliente').optional().isInt().run(req);
+
+    let result = validationResult(req);
+
+    if(!result.isEmpty()){
+        return res.send(result);
+    }
+
+    next();
+}
+
+const orderDelete = async(req,res,next) =>{
+    await param('id', 'Id invalido').isString().exists().run(req);
 
     let result = validationResult(req);
 
@@ -17,5 +48,7 @@ const validationOrder = async(req,res,next) =>{
 }
 
 export  {
-    validationOrder
+    orderCreate,
+    orderUpdate,
+    orderDelete
 }

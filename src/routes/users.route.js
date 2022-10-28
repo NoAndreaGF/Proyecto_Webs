@@ -1,22 +1,21 @@
 import express from 'express';
 import { UserController } from '../controllers/user.controller.js';
-import { validationUser } from '../validators/user.validation.js';
-import { generalValidation } from '../validators/general.validation.js';
+import { user, userUpdate, userDelete } from '../validators/user.validation.js';
 
 const usersRouter = express.Router();
 
 const userController = new UserController();
 
-usersRouter.get('/verify', userController.verify);
+usersRouter.get('/verify', user, userController.verify);
 
-usersRouter.post('/', validationUser, userController.create);
+usersRouter.post('/', user, userController.create);
 
 usersRouter.get('/', userController.findAll);
 
-usersRouter.get('/:id', generalValidation, userController.findById);
+usersRouter.get('/:id', userController.findById);
 
-usersRouter.patch('/:id', generalValidation, validationUser, userController.update);
+usersRouter.patch('/:id', userUpdate, userController.update);
 
-usersRouter.delete('/:id', generalValidation, userController.delete);
+usersRouter.delete('/:id', userController.delete).use(userDelete);
 
 export { usersRouter };
