@@ -13,9 +13,15 @@ import {JWTMiddleware} from './middlewares/jwt.middleware.js';
 const port = process.env.PORT || 3000;
 const app = express();
 
+app.use(function(req, res, next) {
+  //res.header("x-access-token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFuYSBCb2RlZ2EiLCJwYXNzd29yZCI6IjEyMzQ1NiIsImlhdCI6MTY2ODExNzQxNiwiZXhwIjoxNjY4OTgxNDE2fQ.t49HBIF1JSQgHGZuxlTDM5UiQog1tfI3hlF3vvNqYBI");
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use(logMiddleware);
 app.use(errorsMiddleware);
-app.use(JWTMiddleware);
+//app.use(JWTMiddleware);
 
 // Parse request middleware
 app.use(express.urlencoded({extended:true}));

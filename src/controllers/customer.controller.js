@@ -83,7 +83,9 @@ export class CustomerController {
 
         await customerRepository.findAll()
         .then((customers) => {
-            res.send("Clientes encontrados: " + JSON.stringify(customers, null, 4));
+            //res.send("Clientes encontrados: " + JSON.stringify(customers, null, 4));
+            res.send(customers);
+
         })
         .catch(() => {
             res.status(500).send({
