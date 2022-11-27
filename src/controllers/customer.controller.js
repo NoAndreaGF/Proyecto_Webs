@@ -70,7 +70,7 @@ export class CustomerController {
         const idCustomer = req.params.id;
         await customerRepository.findById(idCustomer)
         .then((customer) => {
-            res.send("Se encontro el cliente: " + JSON.stringify(customer, null, 4));
+            res.send(customer);
         })
         .catch(() => {
             res.status(500).send({
@@ -83,7 +83,6 @@ export class CustomerController {
 
         await customerRepository.findAll()
         .then((customers) => {
-            //res.send("Clientes encontrados: " + JSON.stringify(customers, null, 4));
             res.send(customers);
 
         })

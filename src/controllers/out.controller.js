@@ -68,7 +68,7 @@ export class OutController {
 
         await outRepository.findById(idOut)
             .then((out) => {
-                res.send("Se encontro la salida: " + JSON.stringify(out, null, 4));
+                res.send(out);
             })
             .catch(() => {
                 res.status(500).send({
@@ -81,7 +81,7 @@ export class OutController {
 
         await outRepository.findAll()
             .then((out) => {
-                res.send("Salidas encontradas: " + JSON.stringify(out, null, 4));
+                res.send(out);
             })
             .catch(() => {
                 res.status(500).send({

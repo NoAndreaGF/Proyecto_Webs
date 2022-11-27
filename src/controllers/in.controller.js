@@ -68,7 +68,7 @@ export class InController {
         
         await inRepository.findById(idIn)
         .then((inObject) => {
-            res.send("Se encontro la entrada: " + JSON.stringify(inObject, null, 4));
+            res.send(inObject);
         })
         .catch(() => {
             res.status(500).send({
@@ -81,7 +81,7 @@ export class InController {
 
         await inRepository.findAll()
         .then((inObjects) => {
-            res.send("Entradas encontradas: " + JSON.stringify(inObjects, null, 4));
+            res.send(inObjects);
         })
         .catch(() => {
             res.status(500).send({

@@ -26,7 +26,7 @@ export class OrderController {
         await orderRepository.create(
             order
         ).then((order) => {
-            res.send("Se creo la orden: " + JSON.stringify(order, null, 4));
+            res.send(order);
         }).catch(() => {
             res.status(500).send({
                 message: 'No se pudo conectar con la base de datos.'
@@ -73,7 +73,7 @@ export class OrderController {
 
         await orderRepository.findById(idOrder)
             .then((order) => {
-                res.send("Se encontro la orden: " + JSON.stringify(order, null, 4));
+                res.send(order);
             })
             .catch(() => {
                 res.status(500).send({
@@ -86,7 +86,7 @@ export class OrderController {
 
         await orderRepository.findAll()
             .then((orders) => {
-                res.send("Ordenes encontradas: " + JSON.stringify(orders, null, 4));
+                res.send(orders);
             })
             .catch(() => {
                 res.status(500).send({

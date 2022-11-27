@@ -71,7 +71,7 @@ export class UserController {
         const idUser = req.params.id;
         await userRepository.findById(idUser)
             .then((user) => {
-                res.send("Se encontro el usuario: " + JSON.stringify(user, null, 4));
+                res.send(user);
             })
             .catch(() => {
                 res.status(500).send({
@@ -84,7 +84,7 @@ export class UserController {
 
         await userRepository.findAll()
             .then((users) => {
-                res.send("Usuarios encontrados: " + JSON.stringify(users, null, 4));
+                res.send(users);
             })
             .catch(() => {
                 res.status(500).send({

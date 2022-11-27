@@ -72,7 +72,7 @@ export class ProductController {
         const idProduct = req.params.id;
         await productRepository.findById(idProduct)
             .then((product) => {
-                res.send("Se encontro el producto: " + JSON.stringify(product, null, 4));
+                res.send(product);
             })
             .catch(() => {
                 res.status(500).send({
@@ -85,7 +85,7 @@ export class ProductController {
 
         await productRepository.findAll()
             .then((products) => {
-                res.send("Productos encontrados: " + JSON.stringify(products, null, 4));
+                res.send(products);
             })
             .catch(() => {
                 res.status(500).send({

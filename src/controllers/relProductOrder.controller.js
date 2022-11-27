@@ -70,7 +70,7 @@ export class RelProductOrderController {
 
         await relProductOrderRepository.findById(idRel)
             .then((rel) => {
-                res.send("Se encontro la relación: " + JSON.stringify(rel, null, 4));
+                res.send(rel);
             })
             .catch(() => {
                 res.status(500).send({
@@ -83,7 +83,7 @@ export class RelProductOrderController {
 
         await relProductOrderRepository.findAll()
             .then((rel) => {
-                res.send("Relaciones encontradas: " + JSON.stringify(rel, null, 4));
+                res.send(rel);
             })
             .catch(() => {
                 res.status(500).send({
