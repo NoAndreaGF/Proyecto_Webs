@@ -6,7 +6,7 @@ const usersRouter = express.Router();
 
 const userController = new UserController();
 
-usersRouter.get('/verify', user, userController.verify);
+usersRouter.post('/verify', user, userController.verify);
 
 usersRouter.post('/', user, userController.create);
 

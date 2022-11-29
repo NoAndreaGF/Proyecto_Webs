@@ -3,7 +3,7 @@ import { llave } from '../configs/config.js';
 
 export { JWTMiddleware };
 
-var whitelist = ['/users/verifyGET','/usersPOST']
+var whitelist = ['/users/verifyPOST','/usersPOST']
 
 const JWTMiddleware = (req, res, next) => {
 

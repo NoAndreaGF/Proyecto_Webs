@@ -10,14 +10,16 @@ import { relProductOrdersRouter } from './routes/relProductOrder.route.js';
 import { usersRouter } from './routes/users.route.js';
 import {JWTMiddleware} from './middlewares/jwt.middleware.js';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 2526;
 const app = express();
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS, PATCH");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-access-token");
   next();
 });
+
 app.use(logMiddleware);
 app.use(errorsMiddleware);
 //app.use(JWTMiddleware);
