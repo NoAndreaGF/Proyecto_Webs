@@ -5,7 +5,25 @@ const User = db.user;
 export class UserRepository {
 
     async create(user) {
-        return await User.create(user);
+        let notDuplicate = false;
+
+        await User.findOne({
+            where: {
+                username: user.username,
+            }
+        }).then((user) => {
+            if (user != null) {
+                notDuplicate = false;
+            }
+            else {
+                notDuplicate = true;
+            }
+        });
+
+        if (notDuplicate) {
+            return await User.create(user);
+        }
+        return null;
     };
 
     async update(id, userData) {

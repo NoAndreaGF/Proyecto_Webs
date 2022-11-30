@@ -24,7 +24,12 @@ export class UserController {
     await userRepository
       .create(user)
       .then((user) => {
-        res.send("Se creo el usuario: " + JSON.stringify(user, null, 4));
+        if (user != null) {
+          res.send(user);
+        }
+        else {
+          res.send("406");
+        }
       })
       .catch(() => {
         res.status(500).send({
@@ -126,7 +131,6 @@ export class UserController {
         res.send(token);
       })
       .catch(() => {
-        console.log("No envió el token pero mando la bd");
         res.status(500).send({
           message: "No se pudo conectar con la base de datos.",
         });
