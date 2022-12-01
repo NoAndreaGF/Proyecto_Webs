@@ -8,7 +8,7 @@ const user = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -23,7 +23,7 @@ const userUpdate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -35,7 +35,7 @@ const userDelete = async(req,res,next) => {
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();

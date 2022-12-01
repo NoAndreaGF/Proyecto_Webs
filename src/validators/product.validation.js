@@ -11,7 +11,7 @@ const productCreate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -29,7 +29,7 @@ const productUpdate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -41,7 +41,7 @@ const productDelete = async(req,res,next) => {
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();

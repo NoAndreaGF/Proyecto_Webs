@@ -9,7 +9,7 @@ const outCreate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -25,7 +25,7 @@ const outUpdate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -37,7 +37,7 @@ const outDelete = async(req,res,next) => {
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();

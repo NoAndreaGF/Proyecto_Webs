@@ -10,7 +10,7 @@ const relCreate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -27,7 +27,7 @@ const relUpdate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -39,7 +39,7 @@ const relDelete = async(req,res,next) => {
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();

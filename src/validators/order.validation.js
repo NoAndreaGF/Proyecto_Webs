@@ -11,7 +11,7 @@ const orderCreate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -29,7 +29,7 @@ const orderUpdate = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
@@ -41,7 +41,7 @@ const orderDelete = async(req,res,next) =>{
     let result = validationResult(req);
 
     if(!result.isEmpty()){
-        return res.send(result);
+        return res.status;
     }
 
     next();
