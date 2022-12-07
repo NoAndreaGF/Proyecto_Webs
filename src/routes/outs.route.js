@@ -8,6 +8,8 @@ const outController = new OutController();
 
 outsRouter.post('/', outCreate, outController.create);
 
+outsRouter.get('/busqueda/:search',outController.findBySearch);
+
 outsRouter.get('/', outController.findAll);
 
 outsRouter.get('/:id', outController.findById);

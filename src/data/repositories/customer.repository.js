@@ -1,4 +1,5 @@
 import { db } from '../../models/models.js';
+import { Op } from 'sequelize';
 
 const Customer = db.customer;
 
@@ -34,4 +35,27 @@ export class CustomerRepository {
             where: {idCustomer} 
         });
     };
+
+    async findBySearch(search) {
+        return await Customer.findAll({
+            attributes: ["idCustomer", "name", "lastName", "phone", "address", "createdAt", "updatedAt"],
+            include:["orders"],
+            where: {
+                [Op.or]: {
+                    name: {
+                        [Op.substring]: search
+                    },
+                    idCustomer: {
+                        [Op.eq]: search
+                    },
+                    lastName: {
+                        [Op.substring]: search
+                    },
+                    phone: {
+                        [Op.eq]: search
+                    }
+                }         
+            } 
+        });
+    }
 }

@@ -7,6 +7,8 @@ const customerController = new CustomerController();
 
 customersRouter.post('/', custumerCreate, customerController.create);
 
+customersRouter.get('/busqueda/:search',customerController.findBySearch)
+
 customersRouter.get('/', customerController.findAll);
 
 customersRouter.get('/:id', customerController.findById);

@@ -103,6 +103,19 @@ export class OutController {
                     message: 'No se pudo conectar con la base de datos.'
                 });
             });
-
     }
+
+    async findBySearch(req, res) {
+        const search = req.params.search;
+        await outRepository.findBySearch(search)
+            .then((out) => {
+                res.send(out);
+            })
+            .catch(() => {
+                res.status(500).send({
+                    message: 'No se pudo conectar con la base de datos.'
+                });
+            });
+    }
+
 }

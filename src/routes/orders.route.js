@@ -7,6 +7,8 @@ const ordersRouter = express.Router();
 
 const orderController = new OrderController();
 
+ordersRouter.get('/busqueda/:search', orderController.findBySearch);
+
 ordersRouter.post('/', orderCreate, orderController.create);
 
 ordersRouter.get('/', orderController.findAll);

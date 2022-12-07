@@ -8,6 +8,8 @@ const productController = new ProductController();
 
 productsRouter.post('/', productCreate, productController.create);
 
+productsRouter.get('/busqueda/:search', productController.findBySearch);
+
 productsRouter.get('/', productController.findAll);
 
 productsRouter.get('/:id', productController.findById);
@@ -15,5 +17,6 @@ productsRouter.get('/:id', productController.findById);
 productsRouter.patch('/:id', productUpdate, productController.update);
 
 productsRouter.delete('/:id', productController.delete).use(productDelete);
+
 
 export { productsRouter };
