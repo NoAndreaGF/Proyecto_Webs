@@ -46,8 +46,8 @@ export class OutRepository {
                         [Op.eq]: search
                     },
                     date: {
-                        [Op.substring]: search
-                    },
+                        [Op.startsWith]: search
+                    }
                 }
             }
         });
