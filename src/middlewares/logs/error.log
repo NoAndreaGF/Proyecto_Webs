@@ -41,3 +41,4 @@
 ::1 GET /orders/busqueda/En%20espera 500 55 - 3.996 ms
 ::1 GET /orders/busqueda/En%20espera 500 55 - 4.550 ms
 ::1 POST /ins 500 55 - 396.396 ms
+::1 POST /orders 500 55 - 185.699 ms

@@ -47,6 +47,12 @@ export class OrderRepository {
                     },
                     status: {
                         [Op.eq]: search
+                    },
+                    orderDate: {
+                        [Op.startsWith]: search
+                    },
+                    deliveryDate: {
+                        [Op.startsWith]: search
                     }
                 }
             }

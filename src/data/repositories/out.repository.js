@@ -19,20 +19,20 @@ export class OutRepository {
 
     async findById(idOut) {
         return await Out.findByPk(idOut, {
-            include:["product"]
+            include: ["product"]
         });
     };
 
     findAll = async () => {
         return await Out.findAll({
             attributes: ["idOut", "quantity", "date", "createdAt", "updatedAt"],
-            include:["product"],
+            include: ["product"],
         });
     };
 
     async delete(idOut) {
-        await Out.destroy({ 
-            where: {idOut} 
+        await Out.destroy({
+            where: { idOut }
         });
     }
 
@@ -44,6 +44,9 @@ export class OutRepository {
                 [Op.or]: {
                     idOut: {
                         [Op.eq]: search
+                    },
+                    date: {
+                        [Op.startsWith]: search
                     }
                 }
             }
