@@ -44,9 +44,6 @@ export class InRepository {
                 [Op.or]: {
                     idIn: {
                         [Op.eq]: search
-                    },
-                    date: {
-                        [Op.startsWith]: search
                     }
                 }
             }
